@@ -17,8 +17,7 @@ function initializeApp() {
     const savedLanguage = localStorage.getItem('language') || 'zh';
     setLanguage(savedLanguage);
     
-    // 初始化性能模式
-    initializePerformanceMode();
+
     
     // 检查当前页面并初始化相应的功能
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
@@ -37,6 +36,25 @@ function initializeMainPage() {
     const startDateElement = document.getElementById('startDate');
     if (startDateElement) {
         startDateElement.value = formatDateTimeLocal(now);
+    }
+    
+    // 初始化复选框状态
+    const enableBillingCheckbox = document.getElementById('enableBilling');
+    const enablePlanCheckbox = document.getElementById('enablePlan');
+    const billingForm = document.getElementById('billingForm');
+    const planForm = document.getElementById('planForm');
+    
+    if (enableBillingCheckbox) {
+        enableBillingCheckbox.checked = state.config.enableBilling;
+    }
+    if (enablePlanCheckbox) {
+        enablePlanCheckbox.checked = state.config.enablePlan;
+    }
+    if (billingForm && state.config.enableBilling) {
+        billingForm.classList.remove('hidden');
+    }
+    if (planForm && state.config.enablePlan) {
+        planForm.classList.remove('hidden');
     }
     
     // 初始化配置
@@ -162,22 +180,43 @@ function handleKeyboardShortcuts(event) {
         toggleLanguage();
     }
     
-    // Ctrl/Cmd + P 切换性能模式
-    if ((event.ctrlKey || event.metaKey) && event.key === 'p') {
-        event.preventDefault();
-        togglePerformanceMode();
-    }
+
 }
 
-// 错误处理
+// 增强的错误处理
 window.addEventListener('error', function(event) {
     console.error('全局错误:', event.error);
-    showToast('发生错误，请刷新页面重试');
+    
+    // 根据错误类型提供不同的用户提示
+    let errorMessage = '发生错误，请刷新页面重试';
+    
+    if (event.error instanceof TypeError) {
+        errorMessage = '数据类型错误，请检查输入格式';
+    } else if (event.error instanceof ReferenceError) {
+        errorMessage = '功能模块加载失败，请刷新页面';
+    } else if (event.error instanceof SyntaxError) {
+        errorMessage = 'JSON格式错误，请检查配置语法';
+    }
+    
+    showToast(errorMessage);
 });
 
 // 未处理的Promise拒绝
 window.addEventListener('unhandledrejection', function(event) {
     console.error('未处理的Promise拒绝:', event.reason);
+    
+    // 提供更友好的Promise错误提示
+    let errorMessage = '操作失败，请重试';
+    
+    if (event.reason && event.reason.message) {
+        if (event.reason.message.includes('fetch')) {
+            errorMessage = '网络请求失败，请检查网络连接';
+        } else if (event.reason.message.includes('parse')) {
+            errorMessage = '数据解析失败，请检查数据格式';
+        }
+    }
+    
+    showToast(errorMessage);
     event.preventDefault();
 });
 
@@ -189,17 +228,37 @@ document.addEventListener('visibilitychange', function() {
     }
 });
 
-// 页面卸载前保存状态
+// 页面卸载前保存状态和清理资源
 window.addEventListener('beforeunload', function() {
     // 保存当前状态到本地存储
     storage.set('appState', {
         config: state.config,
         tags: state.tags,
         theme: state.theme,
-        language: state.language,
-        performanceMode: state.performanceMode
+        language: state.language
     });
+    
+    // 清理事件监听器和定时器
+    clearEventListeners();
 });
+
+// 清理事件监听器函数
+function clearEventListeners() {
+    // 清理防抖定时器
+    const formElements = document.querySelectorAll('input, select, textarea');
+    formElements.forEach(element => {
+        // 移除事件监听器（如果有引用的话）
+        element.removeEventListener('input', handleFormChange);
+        element.removeEventListener('change', handleFormChange);
+    });
+    
+    // 清理其他可能的定时器
+    if (window.debounceTimers) {
+        Object.values(window.debounceTimers).forEach(timer => {
+            clearTimeout(timer);
+        });
+    }
+}
 
 // 恢复保存的状态
 function restoreAppState() {
@@ -225,10 +284,7 @@ function restoreAppState() {
             setLanguage(savedState.language);
         }
         
-        // 恢复性能模式
-        if (savedState.performanceMode !== undefined) {
-            setPerformanceMode(savedState.performanceMode);
-        }
+
     }
 }
 

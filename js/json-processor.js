@@ -111,7 +111,7 @@ function refreshFromCode(event) {
             }
             
             // 解析标签
-            if (parsedConfig.planDataMod.extra && parsedConfig.planDataMod.extra !== 'XXXX') {
+            if (parsedConfig.planDataMod.extra && parsedConfig.planDataMod.extra !== 'xxxx.im') {
                 state.tags = parsedConfig.planDataMod.extra.split(',').map(tag => tag.trim()).filter(tag => tag);
                 renderTags();
             }

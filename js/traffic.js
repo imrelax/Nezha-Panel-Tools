@@ -1,7 +1,12 @@
 // Traffic monitoring page script
 
+// 页面初始化函数
+function initializeTrafficPage() {
+    initializeTraffic();
+}
+
 document.addEventListener('DOMContentLoaded', function() {
-    // script.js已经包含了主题和性能模式的初始化
+    // script.js已经包含了主题的初始化
     initializeTraffic();
 });
 
