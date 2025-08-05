@@ -3,59 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NezhaJsonTools</title>
+    <title>哪吒面板JSON快捷生成工具 - 流量监控规则配置</title>
+    <meta name="description" content="哪吒面板JSON快捷生成工具，支持流量监控规则配置，快速生成哪吒监控面板的JSON配置文件">
+    <meta name="keywords" content="哪吒面板,JSON生成器,流量监控,服务器监控,配置工具">
+    <meta name="author" content="哪吒面板JSON工具">
+    <meta property="og:title" content="哪吒面板JSON快捷生成工具">
+    <meta property="og:description" content="快速生成哪吒监控面板的JSON配置文件，支持流量监控规则配置">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="哪吒面板JSON快捷生成工具">
+    <meta name="twitter:description" content="快速生成哪吒监控面板的JSON配置文件，支持流量监控规则配置">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="styles.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f3f6fb',
+                            100: '#e3edfa',
+                            500: '#2563eb',
+                            600: '#1d4ed8',
+                            900: '#1e293b'
+                        }
+                    },
+                    backdropBlur: {
+                        xs: '2px'
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="css/styles.css" rel="stylesheet">
 </head>
-<body>
-    <div class="container">
-        <header class="header">
-            <div class="header-top">
-                <h1><i class="fas fa-server"></i> NezhaJsonTools</h1>
-                <div class="header-controls">
-                    <button class="ai-btn" id="aiModeBtn" onclick="toggleAIMode()">
-                        <i class="fas fa-flask"></i>
-                        <span>使用 AI 生成 JSON</span>
-                    </button>
-                    <button class="performance-toggle" id="performanceToggle" onclick="togglePerformanceMode()" title="开启性能模式">
-                        <i class="fas fa-tachometer-alt"></i>
-                    </button>
-                    <button class="theme-toggle" onclick="toggleTheme()">
+<body class="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 transition-all duration-300">
+    <!-- 科技风背景 -->
+    <div class="fixed inset-0 -z-10">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
+        <div class="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-blue-400 opacity-20 blur-[100px] dark:bg-blue-600"></div>
+    </div>
+
+    <!-- 顶部导航栏 -->
+    <nav class="sticky top-0 z-50 border-b border-slate-200/50 dark:border-slate-700/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl">
+        <div class="container mx-auto px-4 py-4 max-w-7xl">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-server text-white text-sm"></i>
+                        </div>
+                        <h1 class="text-xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 dark:from-slate-100 dark:to-slate-400 bg-clip-text text-transparent">
+                            哪吒面板JSON工具
+                        </h1>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button class="p-2 rounded-lg bg-amber-100 hover:bg-amber-200 dark:bg-amber-800 dark:hover:bg-amber-700 text-amber-600 dark:text-amber-400 transition-all duration-300" onclick="toggleTheme()">
                         <i class="fas fa-moon"></i>
                     </button>
-                    <button class="language-toggle" onclick="toggleLanguage()">
-                        <span id="lang-indicator">English</span>
+                    <button class="px-3 py-2 rounded-lg bg-purple-100 hover:bg-purple-200 dark:bg-purple-800 dark:hover:bg-purple-700 text-purple-600 dark:text-purple-400 transition-all duration-300 text-sm" onclick="toggleLanguage()">
+                        <i class="fas fa-globe mr-1"></i>
+                        <span id="lang-indicator">EN</span>
                     </button>
                 </div>
             </div>
-            <nav class="page-switcher">
-                <a href="index.html">备注显示</a>
-                <a href="traffic.html" class="active">流量监控</a>
-                <a href="alert.html">警报规则</a>
-            </nav>
-            <p class="star-tip"><a href="https://github.com/LAGSNESOwO/NezhaJSONTools/" target="_blank">请到 GitHub 为项目点亮 Star！</a></p>
-        </header>
+        </div>
+    </nav>
 
-        <div class="main-content">
-            <div class="settings-panel">
-                <div class="form-section">
-                    <div class="section-header">
-                        <h3 class="section-title"><i class="fas fa-chart-line"></i> 流量监控规则</h3>
-                    </div>
-                    <div class="form-content">
-                        <div class="form-group">
-                            <label>类型</label>
-                            <select id="ruleType" onchange="updateTrafficRule()">
+    <!-- 页面标签导航 -->
+    <div class="border-b border-slate-200/50 dark:border-slate-700/50 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm">
+        <div class="container mx-auto px-4 max-w-7xl">
+            <nav class="flex space-x-1 py-2">
+                <a href="index.html" class="px-4 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium text-sm transition-all duration-300 flex items-center">
+                    <i class="fas fa-sticky-note mr-2"></i>
+                    备注显示
+                </a>
+                <a href="traffic.html" class="px-4 py-2 rounded-lg bg-blue-500 text-white font-medium text-sm transition-all duration-300 flex items-center">
+                    <i class="fas fa-chart-line mr-2"></i>
+                    流量监控
+                </a>
+                <a href="alert.html" class="px-4 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium text-sm transition-all duration-300 flex items-center">
+                    <i class="fas fa-bell mr-2"></i>
+                    警报规则
+                </a>
+                <a href="about.html" class="px-4 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium text-sm transition-all duration-300 flex items-center">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    关于我们
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <div class="main-content" id="settings-view">
+            <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                <div class="space-y-6">
+                    <!-- 流量监控规则 -->
+                    <div class="bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-2xl border border-slate-200/50 dark:border-slate-700/50 overflow-hidden hover:shadow-xl transition-all duration-300">
+                        <div class="p-6 border-b border-slate-200/50 dark:border-slate-700/50 cursor-pointer hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors duration-300" onclick="toggleCardCollapse(this)">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 flex items-center">
+                                    <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mr-3">
+                                        <i class="fas fa-chart-line text-white text-sm"></i>
+                                    </div>
+                                    <span data-key="trafficMonitoring">流量监控规则</span>
+                                </h3>
+                                <i class="fas fa-chevron-up transform transition-transform duration-300 text-slate-500"></i>
+                            </div>
+                        </div>
+                        <div class="card-content p-6 space-y-6">
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">类型</label>
+                            <select id="ruleType" onchange="updateTrafficRule()" class="w-full bg-white/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg px-4 py-3 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-300 backdrop-blur-sm">
                                 <option value="transfer_in_cycle">入站流量</option>
                                 <option value="transfer_out_cycle" selected>出站流量</option>
                                 <option value="transfer_all_cycle">双向流量</option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label>最小值</label>
-                            <div class="input-group">
-                                <input type="number" id="minValue" onchange="updateTrafficRule()">
-                                <select id="minUnit" onchange="updateTrafficRule()">
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">最小值</label>
+                            <div class="flex gap-3">
+                                <input type="number" id="minValue" onchange="updateTrafficRule()" class="flex-1 bg-white/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg px-4 py-3 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-300 backdrop-blur-sm">
+                                <select id="minUnit" onchange="updateTrafficRule()" class="bg-white/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg px-4 py-3 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-300 backdrop-blur-sm">
                                     <option value="1">B</option>
                                     <option value="1024">KB</option>
                                     <option value="1048576">MB</option>
@@ -64,11 +137,11 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label>最大值</label>
-                            <div class="input-group">
-                                <input type="number" id="maxValue" onchange="updateTrafficRule()">
-                                <select id="maxUnit" onchange="updateTrafficRule()">
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">最大值</label>
+                            <div class="flex gap-3">
+                                <input type="number" id="maxValue" onchange="updateTrafficRule()" class="flex-1 bg-white/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg px-4 py-3 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-300 backdrop-blur-sm">
+                                <select id="maxUnit" onchange="updateTrafficRule()" class="bg-white/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg px-4 py-3 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-300 backdrop-blur-sm">
                                     <option value="1">B</option>
                                     <option value="1024">KB</option>
                                     <option value="1048576">MB</option>
@@ -77,17 +150,17 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label>周期开始</label>
-                            <input type="datetime-local" id="cycleStart" onchange="updateTrafficRule()">
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">周期开始</label>
+                            <input type="datetime-local" id="cycleStart" onchange="updateTrafficRule()" class="w-full bg-white/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg px-4 py-3 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-300 backdrop-blur-sm">
                         </div>
-                        <div class="form-group">
-                            <label>周期数量</label>
-                            <input type="number" id="cycleInterval" value="1" onchange="updateTrafficRule()">
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">周期数量</label>
+                            <input type="number" id="cycleInterval" value="1" onchange="updateTrafficRule()" class="w-full bg-white/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg px-4 py-3 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-300 backdrop-blur-sm">
                         </div>
-                        <div class="form-group">
-                            <label>周期单位</label>
-                            <select id="cycleUnit" onchange="updateTrafficRule()">
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">周期单位</label>
+                            <select id="cycleUnit" onchange="updateTrafficRule()" class="w-full bg-white/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg px-4 py-3 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-300 backdrop-blur-sm">
                                 <option value="hour">hour</option>
                                 <option value="day">day</option>
                                 <option value="week">week</option>
@@ -95,211 +168,137 @@
                                 <option value="year">year</option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label>覆盖</label>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="cover" onchange="updateTrafficRule()">
-                                <span class="slider"></span>
+                        <div class="flex items-center justify-between">
+                            <label class="text-sm font-medium text-slate-700 dark:text-slate-300">覆盖</label>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="cover" onchange="updateTrafficRule()" class="sr-only peer">
+                                <div class="w-11 h-6 bg-slate-200 dark:bg-slate-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300/50 dark:peer-focus:ring-blue-800/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-blue-500 peer-checked:to-purple-600"></div>
                             </label>
                         </div>
-                        <div class="form-group">
-                            <label>忽略服务器 (用逗号分隔ID)</label>
-                            <input type="text" id="ignoreList" placeholder="3,4" onchange="updateTrafficRule()">
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">忽略服务器 (用逗号分隔ID)</label>
+                            <input type="text" id="ignoreList" placeholder="3,4" onchange="updateTrafficRule()" class="w-full bg-white/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg px-4 py-3 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-300 backdrop-blur-sm">
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 右侧面板 -->
+                <div class="space-y-6">
+                    <!-- JSON 配置 -->
+                    <div class="bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-2xl border border-slate-200/50 dark:border-slate-700/50 overflow-hidden hover:shadow-xl transition-all duration-300">
+                        <div class="p-6 border-b border-slate-200/50 dark:border-slate-700/50 cursor-pointer hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors duration-300" onclick="toggleCardCollapse(this)">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 flex items-center">
+                                    <div class="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center mr-3">
+                                        <i class="fas fa-code text-white text-sm"></i>
+                                    </div>
+                                    <span data-key="jsonConfig">JSON 配置</span>
+                                </h3>
+                                <div class="flex items-center space-x-2">
+                                    <button class="bg-slate-600 hover:bg-slate-700 text-white px-3 py-2 rounded-lg text-sm transition-all duration-300" onclick="refreshFromCode(event)">
+                                        <i class="fas fa-sync-alt mr-2"></i>
+                                        <span data-key="refresh">刷新</span>
+                                    </button>
+                                    <button class="bg-slate-600 hover:bg-slate-700 text-white px-3 py-2 rounded-lg text-sm transition-all duration-300" onclick="copyTrafficCode(event)">
+                                        <i class="fas fa-copy mr-2"></i>
+                                        <span data-key="copy">复制</span>
+                                    </button>
+                                    <i class="fas fa-chevron-up transform transition-transform duration-300 text-slate-500"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-content p-6">
+                            <textarea id="trafficJson" spellcheck="false" class="w-full h-96 p-6 bg-slate-50/50 dark:bg-slate-900/50 text-slate-900 dark:text-slate-100 font-mono text-sm border-0 focus:ring-0 resize-none backdrop-blur-sm" readonly></textarea>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        </div>
 
-            <div class="code-panel">
-                <div class="panel-header">
-                    <h3><i class="fas fa-code"></i> JSON 配置</h3>
-                    <div class="panel-controls-group">
-                        <div class="panel-controls" onclick="event.stopPropagation()">
-                            <button class="copy-btn" onclick="copyTrafficCode(event)">
-                                <i class="fas fa-copy"></i>
-                                <span>复制</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="code-container">
-                    <textarea id="trafficJson" spellcheck="false"></textarea>
-                </div>
-            </div>
-        </div>
-        <div id="ai-chat-view" style="display: none;">
-            <div class="ai-chat-panel">
-                <div class="ai-chat-header" id="aiChatHeader">
-                    <h3><i class="fas fa-robot"></i> 小哪吒 AI 助手</h3>
-                    <div class="window-controls">
-                        <button class="window-btn close-btn" id="aiCloseBtn" title="关闭" onclick="toggleAIMode(false)">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    <div class="mobile-controls">
-                        <button class="mobile-close-btn" id="mobileCloseBtn" title="关闭" onclick="toggleAIMode(false)">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="chat-box" id="chatBox">
-                    <!-- 聊天气泡将会动态添加到这里 -->
-                </div>
-                <div class="chat-input-area">
-                    <textarea id="chatInput" placeholder="输入你的消息..." rows="3"></textarea>
-                    <div class="chat-buttons">
-                        <button id="sendMessageBtn" title="发送"><i class="fas fa-paper-plane"></i></button>
-                        <button id="clearContextBtn" title="清除上下文"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- 警告模态框 -->
-    <div id="warningModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4><i class="fas fa-exclamation-triangle"></i> <span data-key="warning">警告</span></h4>
-                <button class="close" onclick="closeModal()">&times;</button>
+    <div id="warningModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-2xl border border-slate-200/50 dark:border-slate-700/50 max-w-md w-full p-6">
+            <div class="flex items-center mb-4">
+                <i class="fas fa-exclamation-triangle text-yellow-500 text-2xl mr-3"></i>
+                <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-100">警告</h3>
             </div>
-            <div class="modal-body">
-                <p id="warningMessage"></p>
-            </div>
-            <div class="modal-footer">
-                <button onclick="closeModal()" data-key="understand">我知道了</button>
+            <p id="warningMessage" class="text-slate-600 dark:text-slate-300 mb-6"></p>
+            <div class="flex justify-end space-x-3">
+                <button onclick="closeWarningModal()" class="px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors">
+                    取消
+                </button>
+                <button id="confirmWarning" class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg transition-colors duration-300">
+                    确认
+                </button>
             </div>
         </div>
     </div>
 
     <!-- 复制成功提示 -->
-    <div id="copyToast" class="toast">
-        <i class="fas fa-check-circle"></i>
-        <span></span>
+    <div id="copyToast" class="hidden fixed top-4 right-4 bg-green-500/90 backdrop-blur-sm text-white px-6 py-3 rounded-lg border border-green-400/50 z-50 transform translate-x-full transition-transform duration-300">
+        <div class="flex items-center">
+            <i class="fas fa-check-circle mr-2"></i>
+            <span>复制成功！</span>
+        </div>
     </div>
 
-    <!-- 调试窗口 -->
-    <div id="debugWindow" class="debug-window" style="display: none;">
-        <div class="debug-header">
-            <span>调试信息</span>
-            <button class="debug-close" onclick="toggleDebugMode()">×</button>
-        </div>
-        <div class="debug-content">
-            <div class="debug-section">
-                <strong>FPS:</strong> <span id="debugFPS">--</span>
-            </div>
-            <div class="debug-section">
-                <strong>内存:</strong> <span id="debugMemory">--</span>
-            </div>
-            <div class="debug-section">
-                <strong>页面:</strong> <span id="debugPage">--</span>
-            </div>
-            <div class="debug-section">
-                <strong>主题:</strong> <span id="debugTheme">--</span>
-            </div>
-            <div class="debug-section">
-                <strong>AI状态:</strong> <span id="debugAI">--</span>
-            </div>
-            <div class="debug-section">
-                <strong>性能模式:</strong> <span id="debugPerformance">--</span>
-            </div>
-            <div class="debug-section">
-                <strong>日志:</strong>
-                <div id="debugLogs" class="debug-logs"></div>
-            </div>
-        </div>
-    </div>
+
 
     <!-- 页脚 -->
-    <footer class="main-footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <p>By <a href="https://lagsn.es" target="_blank" rel="noopener">LAGSNES</a></p>
-                <p>本网站使用 AIGC 技术</p>
-                <p>小哪吒 AI 助手使用 Qwen3 和 硅基流动</p>
-            </div>
-            <div class="footer-section">
-                <p><a href="https://github.com/LAGSNESOwO/NezhaJSONTools" target="_blank" rel="noopener">
-                    <i class="fab fa-github"></i> GitHub
-                </a></p>
-                <div class="footer-stats">
-                    <span id="busuanzi_container_site_pv">总访问量 <span id="busuanzi_value_site_pv"></span> 次</span>
-                    <span id="busuanzi_container_site_uv">总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+    <footer class="mt-12 bg-white/60 dark:bg-slate-800/60 backdrop-blur-xl border-t border-slate-200/50 dark:border-slate-700/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="space-y-3">
+                    <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-100">项目信息</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm">By <a href="https://xxxx.im" target="_blank" rel="noopener" class="text-blue-600 hover:text-blue-700 transition-colors">X-Man</a></p>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm">本网站使用 AIGC 技术</p>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm">哪吒面板AI助手 使用Trae和Claude-4 生成</p>
                 </div>
-                <p class="footer-note">永久免费使用</p>
-                <p><a href="test-theme.html" class="dev-test-btn">
-                    <i class="fas fa-flask"></i> 开发者测试功能
-                </a></p>
-                <p><button class="dev-test-btn" onclick="toggleDebugMode()">
-                    <i class="fas fa-bug"></i> 调试模式
-                </button></p>
+                <div class="space-y-3">
+                    <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-100">相关链接</h3>
+                    <div class="space-y-2">
+                        <p>
+                            <a href="https://github.com/imrelax/NezhaJSONTools" target="_blank" rel="noopener" class="text-blue-600 hover:text-blue-700 transition-colors inline-flex items-center space-x-2">
+                                <i class="fab fa-github"></i>
+                                <span>GitHub 仓库</span>
+                            </a>
+                        </p>
+                        <p>
+                            <a href="https://nezhajsontools-al0.pages.dev/" target="_blank" rel="noopener" class="text-blue-600 hover:text-blue-700 transition-colors inline-flex items-center space-x-2">
+                                <i class="fas fa-external-link-alt"></i>
+                                <span>在线体验</span>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-100">许可证</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400">本站基于 <a href="https://github.com/LAGSNESOwO/NezhaJSONTools" target="_blank" rel="noopener" class="text-blue-600 hover:text-blue-700 transition-colors">LAGSNESOwO/NezhaJSONTools</a> 修改</p>
+                    <p class="text-sm text-slate-600 dark:text-slate-400">采用 MIT 许可证</p>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 font-medium">永久免费使用</p>
+                </div>
+            </div>
+            <div class="mt-8 pt-6 border-t border-slate-200/50 dark:border-slate-700/50 text-center">
+                <p class="text-sm text-slate-500 dark:text-slate-400">
+                    © 2024 NezhaJsonTools. All rights reserved.
+                    <span class="inline-block w-2 h-2 bg-green-500 rounded-full ml-2 animate-pulse"></span>
+                </p>
             </div>
         </div>
     </footer>
 
-    <!-- 不蒜子统计 -->
-    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
     
-    <!-- 改进的统计方案 -->
-    <script>
-        // 统计功能
-        function initStats() {
-            const pvElement = document.getElementById('busuanzi_value_site_pv');
-            const uvElement = document.getElementById('busuanzi_value_site_uv');
-            
-            if (!pvElement || !uvElement) return;
-            
-            // 初始化本地存储
-            if (!localStorage.getItem('site_pv')) {
-                localStorage.setItem('site_pv', '0');
-            }
-            if (!localStorage.getItem('site_uv')) {
-                localStorage.setItem('site_uv', '0');
-            }
-            
-            // 增加访问量
-            let pv = parseInt(localStorage.getItem('site_pv')) + 1;
-            localStorage.setItem('site_pv', pv.toString());
-            
-            // 检查是否是新访客
-            if (!sessionStorage.getItem('visited')) {
-                let uv = parseInt(localStorage.getItem('site_uv')) + 1;
-                localStorage.setItem('site_uv', uv.toString());
-                sessionStorage.setItem('visited', 'true');
-            }
-            
-            // 立即显示本地统计
-            pvElement.textContent = pv.toLocaleString();
-            uvElement.textContent = localStorage.getItem('site_uv');
-            
-            // 检查不蒜子统计是否正常工作
-            setTimeout(function() {
-                const busuanziPv = document.getElementById('busuanzi_value_site_pv');
-                const busuanziUv = document.getElementById('busuanzi_value_site_uv');
-                
-                // 如果不蒜子统计正常工作，使用其数据
-                if (busuanziPv && busuanziPv.textContent && busuanziPv.textContent.trim() !== '') {
-                    // 不蒜子统计正常，保持其显示
-                    console.log('不蒜子统计正常工作');
-                } else {
-                    // 不蒜子统计失败，确保显示本地统计
-                    console.log('使用本地统计作为备用');
-                    if (busuanziPv) busuanziPv.textContent = pv.toLocaleString();
-                    if (busuanziUv) busuanziUv.textContent = localStorage.getItem('site_uv');
-                }
-            }, 2000);
-        }
-        
-        // 页面加载完成后初始化统计
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initStats);
-        } else {
-            initStats();
-        }
-    </script>
+    <!-- 基础模块 -->
+<script src="js/config.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/utils.js"></script>
+<!-- 页面专用脚本 -->
+<script src="js/traffic.js"></script>
     
-    <script src="script.js"></script>
-    <script src="traffic.js"></script>
-    <script src="effects.js"></script>
 </body>
-</html> 
+</html>

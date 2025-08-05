@@ -1,0 +1,55 @@
+/* Tailwind CSS 自定义配置 */
+
+/* 深色模式变量 */
+:root {
+    --primary-50: #f3f6fb;
+    --primary-100: #e3edfa;
+    --primary-500: #2563eb;
+    --primary-600: #1d4ed8;
+    --primary-900: #1e293b;
+}
+
+.dark {
+    --primary-50: #1e293b;
+    --primary-100: #334155;
+    --primary-500: #3b82f6;
+    --primary-600: #2563eb;
+    --primary-900: #f1f5f9;
+}
+
+/* 代码区域字体 */
+#jsonCode {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    line-height: 1.5;
+    tab-size: 2;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    /* 移动端优化 */
+}
+
+/* 可访问性增强 */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* 打印样式 */
+@media print {
+    .fixed,
+    .sticky,
+    button {
+        display: none !important;
+    }
+    
+    body {
+        background: white !important;
+        color: black !important;
+    }
+}
+
+ 

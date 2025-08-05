@@ -56,5 +56,13 @@ function copyTrafficCode(event) {
     event.stopPropagation();
     const textarea = document.getElementById('trafficJson');
     textarea.select();
-    document.execCommand('copy');
+    try {
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(textarea.value);
+        } else {
+            document.execCommand('copy');
+        }
+    } catch (err) {
+        document.execCommand('copy');
+    }
 }
