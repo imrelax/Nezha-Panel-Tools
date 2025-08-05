@@ -51,6 +51,10 @@ function createNavigation(currentPage = 'index') {
                 
                 <!-- 右侧控制 -->
                 <div class="flex items-center space-x-4">
+                    <!-- 移动端菜单按钮 -->
+                    <button id="mobileMenuButton" class="md:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-300">
+                        <i class="fas fa-bars"></i>
+                    </button>
                     <!-- 主题切换 -->
                     <button id="themeToggle" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-300">
                         <i class="fas fa-moon"></i>
@@ -72,6 +76,22 @@ function createNavigation(currentPage = 'index') {
                 </div>
             </div>
         </div>
+        
+        <!-- 移动端菜单面板 -->
+        <div id="mobileMenu" class="md:hidden hidden bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-t border-slate-200/50 dark:border-slate-700/50">
+            <div class="px-4 py-4 space-y-2">
+                ${Object.entries(pages).map(([key, page]) => {
+                    const isActive = key === currentPage;
+                    const activeClass = isActive ? 'bg-blue-500 text-white' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800';
+                    
+                    return `
+                        <a href="${page.href}" class="block px-4 py-3 rounded-lg ${activeClass} font-medium text-sm transition-all duration-300">
+                            <i class="${page.icon} mr-3"></i>
+                            <span data-key="${key}Page">${page.name}</span>
+                        </a>`;
+                }).join('')}
+            </div>
+        </div>
     </nav>`;
 }
 
@@ -83,7 +103,7 @@ function createFooter() {
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <!-- 项目信息 -->
-                <div class="space-y-4">
+                <div class="space-y-4 text-center md:text-left">
                     <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100" data-key="projectInfo">项目信息</h3>
                     <div class="space-y-2 text-sm text-slate-600 dark:text-slate-400">
                         <p data-key="projectDescription">哪吒面板JSON配置生成工具</p>
@@ -92,28 +112,33 @@ function createFooter() {
                     </div>
                 </div>
                 
-                <!-- 相关链接 -->
-                <div class="space-y-4">
-                    <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100" data-key="relatedLinks">相关链接</h3>
-                    <div class="space-y-2 text-sm">
-                        <a href="https://github.com/LAGSNESOwO/NezhaJSONTools" target="_blank" class="block text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors" data-key="sourceCode">源代码</a>
-                        <a href="https://nezha.wiki" target="_blank" class="block text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors" data-key="nezhaOfficial">哪吒官网</a>
-                        <a href="https://lagsn.es" target="_blank" class="block text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors" data-key="authorSite">作者网站</a>
-                    </div>
-                </div>
-                
-                <!-- 本站相关 -->
-                <div class="space-y-4">
-                    <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100" data-key="siteRelated">本站相关</h3>
-                    <div class="space-y-2 text-sm">
-                        <a href="https://github.com/imrelax/NezhaJSONTools" target="_blank" class="block text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors" data-key="siteSource">本站源码</a>
-                        <a href="https://xxxx.im" target="_blank" class="block text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors" data-key="siteAuthor">本站作者</a>
-                        <a href="about.html" class="block text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors" data-key="siteAbout">本站说明</a>
+                <!-- 相关链接 (移动端隐藏) -->
+                <div class="space-y-4 md:col-span-1 lg:col-span-2 hidden md:block">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <!-- 原作相关 -->
+                        <div class="space-y-4">
+                            <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100" data-key="relatedLinks">相关链接</h3>
+                            <div class="space-y-2 text-sm">
+                                <a href="https://github.com/LAGSNESOwO/NezhaJSONTools" target="_blank" class="block text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors" data-key="sourceCode">源代码</a>
+                                <a href="https://nezha.wiki" target="_blank" class="block text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors" data-key="nezhaOfficial">哪吒官网</a>
+                                <a href="https://lagsn.es" target="_blank" class="block text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors" data-key="authorSite">作者网站</a>
+                            </div>
+                        </div>
+                        
+                        <!-- 本站相关 -->
+                        <div class="space-y-4">
+                            <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100" data-key="siteRelated">本站相关</h3>
+                            <div class="space-y-2 text-sm">
+                                <a href="https://github.com/imrelax/NezhaJSONTools" target="_blank" class="block text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors" data-key="siteSource">本站源码</a>
+                                <a href="https://xxxx.im" target="_blank" class="block text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors" data-key="siteAuthor">本站作者</a>
+                                <a href="about.html" class="block text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors" data-key="siteAbout">本站说明</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
                 <!-- 许可证信息 -->
-                <div class="space-y-4">
+                <div class="space-y-4 hidden md:block">
                     <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100" data-key="license">许可证</h3>
                     <div class="space-y-2 text-sm text-slate-600 dark:text-slate-400">
                         <p data-key="licenseType">MIT License</p>
@@ -243,6 +268,22 @@ function initializeSharedComponents(currentPage = 'index', includeAbout = false)
     if (languageToggle && typeof toggleLanguage === 'function') {
         languageToggle.addEventListener('change', toggleLanguage);
     }
+    
+    // 绑定移动端菜单按钮事件
+    const mobileMenuButton = document.getElementById('mobileMenuButton');
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // 点击菜单外部关闭菜单
+        document.addEventListener('click', function(event) {
+            if (!mobileMenuButton.contains(event.target) && !mobileMenu.contains(event.target)) {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+    }
 }
 
 // 关闭关于模态框
@@ -303,7 +344,7 @@ function showToast(message, type = 'success') {
 
 // 切换卡片折叠状态
 function toggleCardCollapse(headerElement) {
-    const card = headerElement.closest('.bg-white\/70, .bg-slate-800\/70') || headerElement.parentElement;
+    const card = headerElement.closest('.bg-white') || headerElement.closest('.bg-slate-800') || headerElement.parentElement;
     if (!card) return;
     
     const content = card.querySelector('.card-content');

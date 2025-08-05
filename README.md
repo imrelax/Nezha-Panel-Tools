@@ -197,4 +197,12 @@ eventManager.emit('configUpdated', { type: 'billing' });
 - [Font Awesome](https://fontawesome.com/) - 图标库
 - [Nezha](https://github.com/naiba/nezha) - 开源监控系统
 
+## 📞 联系方式
+
+- 项目主页：[GitHub Repository](https://github.com/your-username/NezhaJSONTools)
+- 问题反馈：[Issues](https://github.com/your-username/NezhaJSONTools/issues)
+- 功能建议：[Discussions](https://github.com/your-username/NezhaJSONTools/discussions)
+
+---
+
 **Nezha JSON Tools** - 让 JSON 配置生成变得简单高效！ 🚀

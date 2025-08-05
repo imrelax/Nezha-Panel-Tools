@@ -148,10 +148,12 @@ function parseAndSetCycle(cycleValue) {
     } else {
         cycleLanguageToggle.checked = false;
         // 查找对应的中文周期
-        for (const [key, value] of Object.entries(i18n[state.language].cycles)) {
-            if (value === cycleValue) {
-                cycleSelect.value = key;
-                break;
+        if (typeof i18n !== 'undefined' && i18n[state.language] && i18n[state.language].cycles) {
+            for (const [key, value] of Object.entries(i18n[state.language].cycles)) {
+                if (value === cycleValue) {
+                    cycleSelect.value = key;
+                    break;
+                }
             }
         }
     }
@@ -194,10 +196,12 @@ function parseAndSetAmount(amountValue) {
             amountValueInput.value = value;
             
             // 找到对应的货币
-            for (const [curr, sym] of Object.entries(currencySymbols)) {
-                if (sym === symbol) {
-                    currencySelect.value = curr;
-                    break;
+            if (typeof currencySymbols !== 'undefined') {
+                for (const [curr, sym] of Object.entries(currencySymbols)) {
+                    if (sym === symbol) {
+                        currencySelect.value = curr;
+                        break;
+                    }
                 }
             }
             currencyFormatSelect.value = 'symbol_before';
@@ -212,10 +216,12 @@ function parseAndSetAmount(amountValue) {
                 currencyFormatSelect.value = 'before';
             } else {
                 // 符号在后
-                for (const [curr, sym] of Object.entries(currencySymbols)) {
-                    if (sym === currencyOrSymbol) {
-                        currencySelect.value = curr;
-                        break;
+                if (typeof currencySymbols !== 'undefined') {
+                    for (const [curr, sym] of Object.entries(currencySymbols)) {
+                        if (sym === currencyOrSymbol) {
+                            currencySelect.value = curr;
+                            break;
+                        }
                     }
                 }
                 currencyFormatSelect.value = 'after';
@@ -259,7 +265,7 @@ function parseAndSetTrafficVol(trafficVolValue) {
     
     if (!trafficValueInput || !trafficUnitSelect || !trafficPeriodSelect || !trafficLanguageToggle) return;
     
-    if (trafficVolValue === __('unlimited')) {
+    if (trafficVolValue === (typeof __ === 'function' ? __('unlimited') : 'Unlimited') || trafficVolValue === 'Unlimited' || trafficVolValue === '不限') {
         trafficUnitSelect.value = 'Unlimited';
         trafficValueInput.value = '0';
         return;
@@ -283,10 +289,12 @@ function parseAndSetTrafficVol(trafficVolValue) {
             trafficPeriodSelect.value = period;
         } else {
             // 查找对应的中文周期
-            for (const [key, value] of Object.entries(i18n[state.language].trafficPeriods)) {
-                if (value === period) {
-                    trafficPeriodSelect.value = key;
-                    break;
+            if (typeof i18n !== 'undefined' && i18n[state.language] && i18n[state.language].trafficPeriods) {
+                for (const [key, value] of Object.entries(i18n[state.language].trafficPeriods)) {
+                    if (value === period) {
+                        trafficPeriodSelect.value = key;
+                        break;
+                    }
                 }
             }
         }

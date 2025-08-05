@@ -143,7 +143,7 @@ const i18n = {
         
         // 其他文本
         unlimited: '不限',
-        refreshSuccess: '刷新成功',
+        refreshSuccess: '刷新成功！',
         copySuccess: '复制成功',
         devTeam: '开发团队：'
     },

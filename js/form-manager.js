@@ -234,6 +234,36 @@ function updateCurrencyFormat() {
     updateBilling();
 }
 
+// 更新货币格式选项
+function updateCurrencyFormatOptions() {
+    const currencyFormatSelect = document.getElementById('currencyFormat');
+    const currency = document.getElementById('currency')?.value || 'CNY';
+    
+    if (!currencyFormatSelect) return;
+    
+    const currentValue = currencyFormatSelect.value;
+    const symbol = (typeof currencySymbols !== 'undefined' && currencySymbols[currency]) || currency;
+    
+    // 更新选项显示
+    const options = currencyFormatSelect.querySelectorAll('option');
+    options.forEach(option => {
+        switch (option.value) {
+            case 'before':
+                option.textContent = `50${currency}`;
+                break;
+            case 'symbol_before':
+                option.textContent = `${symbol}50`;
+                break;
+            case 'after':
+                option.textContent = `50${symbol}`;
+                break;
+        }
+    });
+    
+    // 保持当前选中值
+    currencyFormatSelect.value = currentValue;
+}
+
 // 更新金额类型
 function updateAmountType() {
     const amountType = document.getElementById('amountType')?.value;
@@ -320,7 +350,10 @@ function updatePlan() {
         if (state.tags && state.tags.length > 0) {
             state.config.planDataMod.extra = state.tags.join(',');
         } else {
-            state.config.planDataMod.extra = 'xxxx.im';
+            // 检查是否还有默认标签在DOM中
+            const tagsContainer = document.getElementById('tagsContainer');
+            const hasDefaultTag = tagsContainer && tagsContainer.querySelector('.tag-item span');
+            state.config.planDataMod.extra = hasDefaultTag ? 'xxxx.im' : '';
         }
         
         if (typeof updateJsonCode === 'function') {
@@ -402,6 +435,21 @@ function updateUnitOptions() {
     updatePlan();
 }
 
+// 更新带宽单位
+function updateBandwidthUnit() {
+    updatePlan();
+}
+
+// 更新流量单位
+function updateTrafficUnit() {
+    updatePlan();
+}
+
+// 更新流量语言
+function updateTrafficLanguage() {
+    updateTrafficPeriodOptions();
+}
+
 // 更新周期选项（流量）
 function updateTrafficPeriodOptions() {
     const trafficPeriodSelect = document.getElementById('trafficPeriod');
@@ -460,7 +508,7 @@ function addTag() {
             return;
         }
         
-        if (state.tags && state.tags.includes(tagText)) {
+        if (state.tags && Array.isArray(state.tags) && state.tags.includes(tagText)) {
             console.warn('Tag already exists');
             if (typeof showToast === 'function') {
                 showToast('标签已存在');
@@ -500,12 +548,22 @@ function removeTag(button) {
         if (!tagElement) return;
         
         const tagText = tagElement.querySelector('span').textContent;
-        const tagIndex = state.tags.indexOf(tagText);
         
-        if (tagIndex > -1) {
-            state.tags.splice(tagIndex, 1);
-            renderTags();
+        // 如果是默认标签且tags数组为空，直接移除元素
+        if (tagText === 'xxxx.im' && (!state.tags || !Array.isArray(state.tags) || state.tags.length === 0)) {
+            tagElement.remove();
             updatePlan();
+            return;
+        }
+        
+        if (state.tags && Array.isArray(state.tags)) {
+            const tagIndex = state.tags.indexOf(tagText);
+            
+            if (tagIndex > -1) {
+                state.tags.splice(tagIndex, 1);
+                renderTags();
+                updatePlan();
+            }
         }
     } catch (error) {
         console.error('Error in removeTag:', error);
@@ -578,12 +636,16 @@ if (typeof module !== 'undefined' && module.exports) {
         getCycleValue,
         updateCycleOptions,
         updateCurrencyFormat,
+        updateCurrencyFormatOptions,
         updateAmountType,
         getAmountValue,
         updatePlan,
         getBandwidthValue,
         getTrafficVolValue,
         updateUnitOptions,
+        updateBandwidthUnit,
+        updateTrafficUnit,
+        updateTrafficLanguage,
         updateTrafficPeriodOptions,
         updatePlanCurrencyFormat,
         addTag,

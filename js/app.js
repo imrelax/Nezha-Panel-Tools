@@ -59,11 +59,13 @@ function initializeMainPage() {
     
     // 初始化配置
     updateBilling();
-    updatePlan();
-    updateJsonCode();
     
     // 初始化标签
     renderTags();
+    
+    // 更新计划和JSON（在标签渲染后）
+    updatePlan();
+    updateJsonCode();
     
     // 绑定事件监听器
     bindEventListeners();
@@ -151,6 +153,73 @@ function handleFormChange(event) {
             } else if (element.closest('#planForm')) {
                 updatePlan();
             }
+    }
+}
+
+// 复制JSON代码函数
+function copyCode(event) {
+    event.stopPropagation();
+    const textarea = document.getElementById('jsonCode');
+    if (!textarea) {
+        showToast('复制失败：未找到JSON代码区域');
+        return;
+    }
+    
+    if (!textarea.value.trim()) {
+        showToast('复制失败：JSON代码为空');
+        return;
+    }
+    
+    textarea.select();
+    try {
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(textarea.value).then(() => {
+                showToast('复制成功！');
+            }).catch(err => {
+                console.error('Clipboard API failed:', err);
+                // 降级到document.execCommand
+                if (document.execCommand('copy')) {
+                    showToast('复制成功！');
+                } else {
+                    showToast('复制失败，请手动复制');
+                }
+            });
+        } else {
+            // 降级到document.execCommand
+            if (document.execCommand('copy')) {
+                showToast('复制成功！');
+            } else {
+                showToast('复制失败，请手动复制');
+            }
+        }
+    } catch (err) {
+        console.error('Copy failed:', err);
+        showToast('发生错误，请手动复制');
+    }
+}
+
+// 显示提示消息
+function showToast(message) {
+    const toast = document.getElementById('copyToast');
+    if (toast) {
+        const messageSpan = toast.querySelector('span[data-key="copySuccess"]');
+        if (messageSpan) {
+            messageSpan.textContent = message;
+        }
+        
+        toast.classList.remove('hidden', 'translate-x-full');
+        toast.classList.add('translate-x-0');
+        
+        setTimeout(() => {
+            toast.classList.remove('translate-x-0');
+            toast.classList.add('translate-x-full');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 300);
+        }, 2000);
+    } else {
+        // 降级到alert
+        alert(message);
     }
 }
 
@@ -333,6 +402,8 @@ if (typeof module !== 'undefined' && module.exports) {
         initializeMainPage,
         bindEventListeners,
         handleFormChange,
+        copyCode,
+        showToast,
         handleKeyboardShortcuts,
         restoreAppState,
         checkAppVersion
