@@ -144,7 +144,7 @@ function renderIPTable(data) {
             if (ip) {
                 // 创建可点击的IP地址
                 const ipButton = document.createElement('button');
-                ipButton.className = 'text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 font-mono text-xs md:text-sm bg-slate-100 dark:bg-slate-700 px-2 md:px-3 py-1 rounded-md hover:bg-slate-200 dark:hover:bg-slate-600 transition-all duration-300 cursor-pointer break-all';
+                ipButton.className = 'text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 font-mono text-xs md:text-sm bg-blue-50 dark:bg-blue-900/20 px-2 md:px-3 py-1 rounded-md hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-all duration-300 cursor-pointer break-all border border-blue-200 dark:border-blue-700';
                 ipButton.textContent = ip;
                 ipButton.title = '点击复制IP地址';
                 

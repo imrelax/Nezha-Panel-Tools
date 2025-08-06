@@ -156,7 +156,46 @@ const i18n = {
         mobile: '移动',
         telecom: '电信',
         loading: '加载中...',
-        loadError: '加载失败，请稍后重试'
+        loadError: '加载失败，请稍后重试',
+        serviceHelpText: '不知道如何使用本功能？',
+        viewTutorial: '查看教程',
+        
+        // 美化页面
+        beautifyTitle: '面板美化',
+        beautifyDescription: '自定义哪吒面板样式，生成美化配置',
+        beautifyHelpText: '配置哪吒面板自定义参数，生成配置代码导入面板后台实现美化效果',
+        v1ModeLabel: 'V1模式',
+        configSettings: '配置设置',
+        resetConfig: '重置配置',
+        importConfig: '导入配置',
+        loadingConfig: '正在加载配置选项...',
+        configCode: '配置代码',
+        usageInstructions: '使用说明',
+        instruction1: '1. 在左侧配置区域启用并设置您需要的功能参数',
+        instruction2: '2. 右侧会实时生成对应的配置代码',
+        instruction3: '3. 复制生成的配置代码',
+        instruction4: '4. 将代码添加到哪吒面板的自定义代码区域即可生效',
+        instruction5: '5. V1模式适用于哪吒面板V1版本，普通模式适用于V0版本',
+        importConfigTitle: '导入配置',
+        
+        // 美化配置选项
+        themeSelect: '主题选择',
+        defaultTheme: '默认主题',
+        darkTheme: '深色主题',
+        blueTheme: '蓝色主题',
+        greenTheme: '绿色主题',
+        purpleTheme: '紫色主题',
+        primaryColor: '主色调',
+        backgroundColor: '背景色',
+        borderRadius: '圆角大小',
+        fontSize: '字体大小',
+        animations: '动画效果',
+        animationsDesc: '启用页面过渡动画',
+        shadows: '阴影效果',
+        shadowsDesc: '为卡片添加阴影效果',
+        gradients: '渐变背景',
+        gradientsDesc: '使用渐变色背景',
+        customCSS: '自定义CSS'
     },
     
     en: {
@@ -313,7 +352,46 @@ const i18n = {
         mobile: 'China Mobile',
         telecom: 'China Telecom',
         loading: 'Loading...',
-        loadError: 'Loading failed, please try again later'
+        loadError: 'Loading failed, please try again later',
+        serviceHelpText: 'Don\'t know how to use this feature?',
+        viewTutorial: 'View Tutorial',
+        
+        // 美化页面
+        beautifyTitle: 'Panel Beautify',
+        beautifyDescription: 'Customize Nezha panel styles and generate beautify configurations',
+        beautifyHelpText: 'Configure Nezha panel custom parameters to generate configuration code for importing into panel backend to achieve beautification effects',
+        v1ModeLabel: 'V1 Mode',
+        configSettings: 'Configuration Settings',
+        resetConfig: 'Reset Config',
+        importConfig: 'Import Config',
+        loadingConfig: 'Loading configuration options...',
+        configCode: 'Configuration Code',
+        usageInstructions: 'Usage Instructions',
+        instruction1: '1. Enable and configure the function parameters you need in the left configuration area',
+        instruction2: '2. The corresponding configuration code will be generated in real-time on the right',
+        instruction3: '3. Copy the generated configuration code',
+        instruction4: '4. Add the code to the custom code area of Nezha panel to take effect',
+        instruction5: '5. V1 mode is suitable for Nezha panel V1 version, normal mode is suitable for V0 version',
+        importConfigTitle: 'Import Configuration',
+        
+        // 美化配置选项
+        themeSelect: 'Theme Selection',
+        defaultTheme: 'Default Theme',
+        darkTheme: 'Dark Theme',
+        blueTheme: 'Blue Theme',
+        greenTheme: 'Green Theme',
+        purpleTheme: 'Purple Theme',
+        primaryColor: 'Primary Color',
+        backgroundColor: 'Background Color',
+        borderRadius: 'Border Radius',
+        fontSize: 'Font Size',
+        animations: 'Animations',
+        animationsDesc: 'Enable page transition animations',
+        shadows: 'Shadow Effects',
+        shadowsDesc: 'Add shadow effects to cards',
+        gradients: 'Gradient Background',
+        gradientsDesc: 'Use gradient color backgrounds',
+        customCSS: 'Custom CSS'
     }
 };
 

@@ -239,6 +239,23 @@ function getTrafficVolValue() {
     }
 }
 
+// ==================== 卡片折叠功能 ====================
+
+// 切换卡片折叠状态
+function toggleCardCollapse(header) {
+    const card = header.closest('.bg-white\/70, .bg-slate-800\/70') || header.parentElement;
+    const content = card.querySelector('.card-content');
+    const isCollapsed = content.style.display === 'none';
+    
+    if (isCollapsed) {
+        content.style.display = 'block';
+        header.classList.remove('opacity-60');
+    } else {
+        content.style.display = 'none';
+        header.classList.add('opacity-60');
+    }
+}
+
 // ==================== 标签处理部分 ====================
 
 // 渲染标签

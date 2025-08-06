@@ -27,7 +27,8 @@ function createNavigation(currentPage = 'index') {
         index: { name: '账单配置', icon: '💰', href: 'index.html' },
         traffic: { name: '流量监控', icon: '📊', href: 'traffic.html' },
         alert: { name: '警报配置', icon: '🔔', href: 'alert.html' },
-        service: { name: '服务', icon: '🖥️', href: 'service.html' }
+        service: { name: '服务', icon: '🖥️', href: 'service.html' },
+        beautify: { name: '面板美化', icon: '🎨', href: 'beautify.html' }
     };
 
     const navItems = Object.entries(pages).map(([key, page]) => {
@@ -87,8 +88,8 @@ function createNavigation(currentPage = 'index') {
                     const activeClass = isActive ? 'bg-blue-500 text-white' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800';
                     
                     return `
-                        <a href="${page.href}" class="block px-4 py-3 rounded-lg ${activeClass} font-medium text-sm transition-all duration-300">
-                            <i class="${page.icon} mr-3"></i>
+                        <a href="${page.href}" class="block px-4 py-3 rounded-lg ${activeClass} font-medium text-sm transition-all duration-300 flex items-center">
+                            <span class="mr-3">${page.icon}</span>
                             <span data-key="${key}Page">${page.name}</span>
                         </a>`;
                 }).join('')}

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>哪吒面板工具 - 面板美化</title>
+    <meta name="description" content="哪吒面板美化工具，生成JSON配置文件优化面板样式">
+    <meta name="keywords" content="哪吒面板,美化,样式优化,JSON配置,面板定制">
+    <meta name="author" content="哪吒面板工具">
+    <meta property="og:title" content="哪吒面板工具 - 面板美化">
+    <meta property="og:description" content="生成JSON配置文件优化哪吒面板样式">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="哪吒面板工具 - 面板美化">
+    <meta name="twitter:description" content="生成JSON配置文件优化哪吒面板样式">
+    <link rel="icon" type="image/png" href="css/ico.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.3s ease-out',
+                        'bounce-gentle': 'bounceGentle 2s infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(10px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        bounceGentle: {
+                            '0%, 20%, 50%, 80%, 100%': { transform: 'translateY(0)' },
+                            '40%': { transform: 'translateY(-10px)' },
+                            '60%': { transform: 'translateY(-5px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- 浏览器兼容性检查和Polyfills -->
+    <script src="js/core/polyfills.js"></script>
+    <!-- 统计代码 -->
+    <script defer src="https://na.xxxx.im/script.js" data-website-id="2f1ac940-605c-461c-8efd-f5ad2e13c7da"></script>
+    
+</head>
+<body class="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 transition-all duration-300">
+    
+    <!-- 导航栏和背景将通过共享组件动态插入 -->
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- 页面标题 -->
+        <div class="text-center mb-8">
+            <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100 mb-4">
+                <span class="mr-2 md:mr-3 text-purple-500">🎨</span>
+                <span data-key="beautifyTitle">面板美化</span>
+            </h2>
+            <p class="text-sm md:text-base text-slate-600 dark:text-slate-400" data-key="beautifyDescription">优化哪吒面板样式，生成JSON配置文件实现美化效果</p>
+        </div>
+
+        <!-- 使用提示通栏 -->
+        <div class="mb-6 bg-purple-50/80 dark:bg-purple-900/20 backdrop-blur-xl rounded-xl border border-purple-200/50 dark:border-purple-700/50 p-4">
+            <div class="flex items-center space-x-3">
+                <span class="text-purple-500 text-lg">✨</span>
+                <span class="text-sm md:text-base text-purple-700 dark:text-purple-300 font-medium">
+                    <span data-key="beautifyHelpText">配置哪吒面板V1版本自定义参数，生成配置代码导入面板后台实现美化效果</span>
+                </span>
+            </div>
+            <div class="mt-3 text-sm text-purple-600 dark:text-purple-400">
+                本页面功能基于 <a href="https://github.com/hi2shark/nazhua-generator" target="_blank" rel="noopener noreferrer" class="text-purple-700 dark:text-purple-300 hover:text-purple-800 dark:hover:text-purple-200 underline font-medium">https://github.com/hi2shark/nazhua-generator</a> 实现，专为哪吒面板V1版本优化。
+            </div>
+        </div>
+
+        <!-- 主内容区域 -->
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+            <!-- 左侧配置区域 -->
+            <div class="space-y-6">
+        
+                <!-- 配置表单容器 -->
+                <div id="configForm" class="space-y-4">
+                    <!-- 配置项将通过JavaScript动态生成 -->
+                    <div class="text-center text-slate-500 dark:text-slate-400 py-8">
+                        <span data-key="loadingConfig">正在加载配置选项...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧代码导出区域 -->
+            <div class="space-y-6">
+                <!-- 配置代码预览 -->
+                <div class="bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-2xl border border-slate-200/50 dark:border-slate-700/50 overflow-hidden hover:shadow-xl transition-all duration-300">
+                    <div class="p-6 border-b border-slate-200/50 dark:border-slate-700/50">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 flex items-center">
+                                <div class="w-8 h-8 flex items-center justify-center mr-3">
+                                    <span class="text-white text-sm">💻</span>
+                                </div>
+                                <span data-key="configCode">配置代码</span>
+                            </h3>
+                            <div class="flex items-center space-x-2">
+                                <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg text-sm transition-all duration-300 shadow-sm hover:shadow-md" onclick="showImportDialog()">
+                                    <span class="mr-2">📥</span>
+                                    <span data-key="importConfig">导入配置</span>
+                                </button>
+                                <button class="bg-orange-500 hover:bg-orange-600 text-white px-3 py-2 rounded-lg text-sm transition-all duration-300 shadow-sm hover:shadow-md" onclick="resetConfig()">
+                                    <span class="mr-2">🔄</span>
+                                    <span data-key="resetConfig">重置配置</span>
+                                </button>
+                                <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-lg text-sm transition-all duration-300 shadow-sm hover:shadow-md" onclick="copyBeautifyCode(event)">
+                                    <span class="mr-2">📋</span>
+                                    <span data-key="copy">复制代码</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-content p-6">
+                        <div class="bg-slate-900 dark:bg-slate-950 rounded-lg overflow-hidden">
+                            <textarea id="beautifyJsonOutput" readonly class="w-full p-6 bg-slate-900 dark:bg-slate-950 text-green-400 font-mono text-sm border-0 focus:ring-0 resize-none leading-relaxed" rows="25" placeholder="// 生成的配置代码将在这里显示"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 使用说明 -->
+                <div class="usage-tips">
+                    <h3>
+                        <span>💡</span>
+                        <span data-key="usageTips">使用提示</span>
+                    </h3>
+                    <ul>
+                        <li data-key="tip1">在左侧配置区域启用并设置您需要的功能参数</li>
+                        <li data-key="tip2">右侧会实时生成对应的配置代码</li>
+                        <li data-key="tip3">复制生成的配置代码</li>
+                        <li data-key="tip4">将代码添加到哪吒面板V1版本的自定义代码区域即可生效</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入共享组件和主题脚本 -->
+    <script src="js/components/shared-components.js"></script>
+    <script src="js/components/theme.js"></script>
+    <script src="js/core/core.js"></script>
+    <script src="js/pages/beautify.js"></script>
+    <script src="js/utils.js"></script>
+
+    <script>
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化共享组件
+            initializeSharedComponents('beautify');
+            
+            // 初始化主题
+            initializeTheme();
+            
+            // 初始化美化配置
+            if (typeof initializeBeautify === 'function') {
+                initializeBeautify();
+            }
+        });
+
+
+
+        // 重置配置
+        function resetConfig() {
+            if (typeof handleResetConfig === 'function') {
+                handleResetConfig();
+            }
+        }
+
+        // 显示导入对话框
+        function showImportDialog() {
+            if (typeof handleShowImportDialog === 'function') {
+                handleShowImportDialog();
+            }
+        }
+
+        // 更新美化配置
+        function updateBeautifyConfig() {
+            if (typeof generateBeautifyConfig === 'function') {
+                generateBeautifyConfig();
+            }
+        }
+
+        // 刷新数据
+        function refreshBeautifyData(event) {
+            event.preventDefault();
+            updateBeautifyConfig();
+            showToast('配置已刷新', 'success');
+        }
+
+        // 复制代码
+        function copyBeautifyCode(event) {
+            event.preventDefault();
+            const textarea = document.getElementById('beautifyJsonOutput');
+            if (textarea && textarea.value.trim()) {
+                navigator.clipboard.writeText(textarea.value).then(() => {
+                    showToast('配置代码已复制到剪贴板', 'success');
+                }).catch(() => {
+                    // 降级方案
+                    textarea.select();
+                    document.execCommand('copy');
+                    showToast('配置代码已复制到剪贴板', 'success');
+                });
+            } else {
+                showToast('没有可复制的内容', 'error');
+            }
+        }
+    </script>
+
+    <!-- 导入配置弹窗 -->
+    <div id="importModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/50 dark:border-slate-700/50 w-full max-w-2xl max-h-[80vh] overflow-hidden">
+            <div class="p-6 border-b border-slate-200/50 dark:border-slate-700/50">
+                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100" data-key="importConfigTitle">导入配置</h3>
+            </div>
+            <div class="p-6">
+                <textarea id="importText" class="w-full h-64 p-4 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 font-mono text-sm" placeholder="请粘贴配置代码..."></textarea>
+            </div>
+            <div class="p-6 border-t border-slate-200/50 dark:border-slate-700/50 flex justify-end gap-3">
+                <button class="bg-slate-500 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm transition-all duration-300" onclick="hideImportDialog()">
+                    <span data-key="cancel">取消</span>
+                </button>
+                <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm transition-all duration-300" onclick="importConfig()">
+                    <span data-key="confirm">确定</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 隐藏导入对话框
+        function hideImportDialog() {
+            if (typeof handleHideImportDialog === 'function') {
+                handleHideImportDialog();
+            }
+        }
+
+        // 导入配置
+        function importConfig() {
+            if (typeof handleImportConfig === 'function') {
+                handleImportConfig();
+            }
+        }
+
+        // 点击模态框外部关闭
+        document.getElementById('importModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideImportDialog();
+            }
+        });
+    </script>
+</body>
+</html>
