@@ -4,7 +4,7 @@
 const i18n = {
     zh: {
         // 基础文本
-        title: '哪吒面板JSON工具',
+        title: '哪吒面板工具',
         home: '首页',
         traffic: '流量监控',
         alert: '告警规则',
@@ -19,6 +19,7 @@ const i18n = {
         trafficPage: '流量监控',
         alertPage: '警报配置',
         aboutPage: '关于',
+        servicePage: '服务',
         
         // 配置标题
         billingConfig: '账单配置',
@@ -49,7 +50,7 @@ const i18n = {
         cancel: '取消',
         confirm: '确认',
         aboutUs: '关于我们',
-        toolTitle: '哪吒面板JSON快捷生成工具',
+        toolTitle: '哪吒面板工具',
         toolDescription: '这是一个专为哪吒监控面板设计的JSON配置文件生成工具，帮助用户快速生成各种配置文件。',
         mainFeatures: '主要功能：',
         feature1: '账单配置生成',
@@ -60,7 +61,7 @@ const i18n = {
         feature6: '深色模式支持',
         
         // 页脚
-        footerText: '© 2024 哪吒面板JSON工具. 保留所有权利.',
+        footerText: '© 2025 Nezha Panel Tools. 保留所有权利.',
         madeWith: '用',
         and: '和',
         madeBy: '制作',
@@ -145,7 +146,17 @@ const i18n = {
         unlimited: '不限',
         refreshSuccess: '刷新成功！',
         copySuccess: '复制成功',
-        devTeam: '开发团队：'
+        devTeam: '开发团队：',
+        
+        // 服务页面
+        serviceTitle: 'IP地址服务',
+        serviceDescription: '以下IP数据来自互联网，不保证可用性。<br><br>如需反馈问题或获取更多IP资源，请访问：<br><a href="https://github.com/imrelax/Nezha-Panel-Tools" target="_blank" class="text-blue-500 hover:text-blue-600 underline">https://github.com/imrelax/Nezha-Panel-Tools</a>',
+        region: '地区',
+        unicom: '联通',
+        mobile: '移动',
+        telecom: '电信',
+        loading: '加载中...',
+        loadError: '加载失败，请稍后重试'
     },
     
     en: {
@@ -165,6 +176,7 @@ const i18n = {
         trafficPage: 'Traffic Monitor',
         alertPage: 'Alert Config',
         aboutPage: 'About',
+        servicePage: 'Service',
         
         // 配置标题
         billingConfig: 'Billing Configuration',
@@ -206,7 +218,7 @@ const i18n = {
         feature6: 'Dark mode support',
         
         // 页脚
-        footerText: '© 2024 Nezha Panel JSON Tools. All rights reserved.',
+        footerText: '© 2025 Nezha Panel Tools. All rights reserved.',
         madeWith: 'Made with',
         and: 'and',
         madeBy: 'by',
@@ -291,7 +303,17 @@ const i18n = {
         unlimited: 'Unlimited',
         refreshSuccess: 'Refresh successful',
         copySuccess: 'Copy successful',
-        devTeam: 'Development Team:'
+        devTeam: 'Development Team:',
+        
+        // 服务页面
+        serviceTitle: 'IP Address Service',
+        serviceDescription: 'The following IP data comes from the internet and availability is not guaranteed.<br><br>For feedback or more IP resources, please visit:<br><a href="https://github.com/imrelax/Nezha-Panel-Tools" target="_blank" class="text-blue-500 hover:text-blue-600 underline">https://github.com/imrelax/Nezha-Panel-Tools</a>',
+        region: 'Region',
+        unicom: 'China Unicom',
+        mobile: 'China Mobile',
+        telecom: 'China Telecom',
+        loading: 'Loading...',
+        loadError: 'Loading failed, please try again later'
     }
 };
 
@@ -382,7 +404,8 @@ function setTheme(theme) {
     if (themeToggle) {
         const icon = themeToggle.querySelector('i');
         if (icon) {
-            icon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+            icon.className = '';
+    icon.textContent = theme === 'light' ? '🌙' : '☀️';
         }
     }
     
@@ -410,17 +433,31 @@ function setLanguage(language) {
         langIndicator.textContent = language === 'zh' ? 'English' : '中文';
     }
     
-    // 更新语言切换按钮状态
-    const languageToggle = document.getElementById('languageToggle');
-    if (languageToggle) {
-        languageToggle.checked = language === 'en';
+    // 更新语言切换按钮显示
+    const zhSpans = document.querySelectorAll('.language-zh');
+    const enSpans = document.querySelectorAll('.language-en');
+    
+    if (language === 'zh') {
+        zhSpans.forEach(span => span.classList.remove('hidden'));
+        enSpans.forEach(span => span.classList.add('hidden'));
+    } else {
+        zhSpans.forEach(span => span.classList.add('hidden'));
+        enSpans.forEach(span => span.classList.remove('hidden'));
     }
     
     // 更新所有文本
     document.querySelectorAll('[data-key]').forEach(element => {
         const key = element.getAttribute('data-key');
         if (i18n[language] && i18n[language][key]) {
-            element.textContent = i18n[language][key];
+            const content = i18n[language][key];
+            // 安全处理HTML内容
+            if (content.includes('<') && content.includes('>')) {
+                // 对于包含HTML的内容，进行安全处理
+                element.innerHTML = sanitizeHtml(content);
+            } else {
+                // 纯文本内容使用textContent
+                element.textContent = content;
+            }
         }
     });
     
@@ -435,6 +472,55 @@ function setLanguage(language) {
 
 
 
+// HTML内容净化函数
+function sanitizeHtml(html) {
+    // 允许的标签和属性白名单
+    const allowedTags = ['a', 'br', 'span', 'strong', 'em', 'p'];
+    const allowedAttributes = {
+        'a': ['href', 'target', 'class'],
+        'span': ['class'],
+        'strong': ['class'],
+        'em': ['class'],
+        'p': ['class']
+    };
+    
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+    
+    // 递归清理元素
+    function cleanElement(element) {
+        const tagName = element.tagName.toLowerCase();
+        
+        // 检查标签是否在白名单中
+        if (!allowedTags.includes(tagName)) {
+            // 不允许的标签，保留文本内容
+            const textNode = document.createTextNode(element.textContent);
+            element.parentNode.replaceChild(textNode, element);
+            return;
+        }
+        
+        // 清理属性
+        const allowedAttrs = allowedAttributes[tagName] || [];
+        const attrs = Array.from(element.attributes);
+        attrs.forEach(attr => {
+            if (!allowedAttrs.includes(attr.name)) {
+                element.removeAttribute(attr.name);
+            }
+        });
+        
+        // 递归处理子元素
+        Array.from(element.children).forEach(child => {
+            cleanElement(child);
+        });
+    }
+    
+    Array.from(tempDiv.children).forEach(child => {
+        cleanElement(child);
+    });
+    
+    return tempDiv.innerHTML;
+}
+
 // 导出函数（如果支持模块化）
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
@@ -443,6 +529,6 @@ if (typeof module !== 'undefined' && module.exports) {
         setTheme,
         toggleLanguage,
         setLanguage,
-
+        sanitizeHtml
     };
 }

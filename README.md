@@ -1,4 +1,4 @@
-# Nezha JSON Tools
+# Nezha Panel Tools
 
 一个现代化的 JSON 配置生成工具，专为 Nezha 监控系统设计，提供直观的用户界面来生成和管理 JSON 配置文件。
 
@@ -26,25 +26,27 @@
 ## 📁 项目结构
 
 ```
-NezhaJSONTools/
+Nezha-Panel-Tools/
 ├── index.html              # 主页面 - JSON 配置生成器
 ├── traffic.html            # 流量监控页面
 ├── alert.html              # 告警配置页面
-├── about.html              # 关于页面
+├── service.html            # 服务IP查询页面
 ├── js/
-│   ├── core.js             # 核心模块（配置、工具函数、事件管理）
-│   ├── styles.js           # 样式配置系统
-│   ├── shared-components.js # 共享组件（导航、页脚、模态框等）
-│   ├── form-manager.js     # 表单和计划管理
-│   ├── json-processor.js   # JSON 处理和生成
-│   ├── app.js              # 应用主逻辑
-│   ├── traffic.js          # 流量监控页面逻辑
-│   └── alert.js            # 告警页面逻辑
-├── css/
-│   └── styles.css          # 自定义样式
-├── assets/
-│   └── favicon.svg         # 网站图标
-└── README.md               # 项目文档
+│   ├── components/
+│   │   ├── shared-components.js # 共享组件（导航、页脚、模态框等）
+│   │   └── theme.js            # 主题和多语言配置
+│   ├── core/
+│   │   ├── core.js             # 核心模块（配置、工具函数、事件管理）
+│   │   └── polyfills.js        # 浏览器兼容性检查
+│   ├── pages/
+│   │   ├── app.js              # 主页面逻辑
+│   │   ├── traffic.js          # 流量监控页面逻辑
+│   │   ├── alert.js            # 告警页面逻辑
+│   │   └── service.js          # 服务页面逻辑
+│   └── utils.js                # 工具函数和表单处理
+├── config/
+│   └── ip.json                 # IP地址配置数据
+└── README.md                   # 项目文档
 ```
 
 ## 🚀 快速开始
@@ -57,8 +59,8 @@ NezhaJSONTools/
 
 1. **克隆项目**
    ```bash
-   git clone https://github.com/your-username/NezhaJSONTools.git
-   cd NezhaJSONTools
+   git clone https://github.com/imrelax/Nezha-Panel-Tools.git
+   cd Nezha-Panel-Tools
    ```
 
 2. **启动本地服务器**
@@ -80,7 +82,7 @@ NezhaJSONTools/
 
 3. **访问应用**
    
-   打开浏览器访问：`http://localhost:8000`
+   打开浏览器访问：http://localhost:8000
 
 ## 📖 使用指南
 
@@ -108,6 +110,8 @@ NezhaJSONTools/
 - **实时预览**：右侧面板实时显示生成的 JSON 配置
 - **一键复制**：点击复制按钮快速获取配置代码
 - **主题切换**：支持浅色/深色主题自动切换
+- **流量监控**：配置流量监控规则和告警阈值
+- **告警配置**：设置各种监控指标的告警规则
 
 ## 🔧 开发指南
 
@@ -116,18 +120,18 @@ NezhaJSONTools/
 项目采用模块化架构，主要模块包括：
 
 - **core.js**：核心功能模块，包含全局状态管理、工具函数和事件系统
-- **styles.js**：统一的样式配置系统，确保界面一致性
-- **form-manager.js**：表单处理和计划管理逻辑
 - **shared-components.js**：可复用的 UI 组件
+- **theme.js**：统一的主题和多语言配置系统
+- **utils.js**：表单处理和工具函数
 
 ### 样式系统
 
-项目使用 Tailwind CSS 作为基础样式框架，并通过 `styles.js` 提供统一的样式配置：
+项目使用 Tailwind CSS 作为基础样式框架，并通过组件系统提供统一的样式配置：
 
 ```javascript
 // 使用预定义样式类
-const inputClass = styles.input.base;
-const buttonClass = styles.button.primary;
+const inputClass = getStyleClass('input', 'base');
+const buttonClass = getStyleClass('button', 'primary');
 ```
 
 ### 事件系统
@@ -148,7 +152,7 @@ eventManager.emit('configUpdated', { type: 'billing' });
 
 1. 在相应的模块文件中添加功能函数
 2. 更新 HTML 模板（如需要）
-3. 在 `styles.js` 中添加样式配置（如需要）
+3. 在样式配置中添加样式类（如需要）
 4. 使用事件系统处理组件间通信
 
 ## 🌐 浏览器兼容性
@@ -187,22 +191,20 @@ eventManager.emit('configUpdated', { type: 'billing' });
 - 保持代码简洁和可读性
 - 添加适当的错误处理
 
+## 📞 联系我们
+
+- 项目主页：[GitHub Repository](https://github.com/imrelax/Nezha-Panel-Tools)
+- 问题反馈：[Issues](https://github.com/imrelax/Nezha-Panel-Tools/issues)
+- 功能建议：[Discussions](https://github.com/imrelax/Nezha-Panel-Tools/discussions)
+
 ## 📄 许可证
 
-本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
+本项目采用 [MIT 许可证](LICENSE) - 查看 LICENSE 文件了解详情。
 
 ## 🙏 致谢
 
-- [Tailwind CSS](https://tailwindcss.com/) - 现代化的 CSS 框架
-- [Font Awesome](https://fontawesome.com/) - 图标库
-- [Nezha](https://github.com/naiba/nezha) - 开源监控系统
-
-## 📞 联系方式
-
-- 项目主页：[GitHub Repository](https://github.com/your-username/NezhaJSONTools)
-- 问题反馈：[Issues](https://github.com/your-username/NezhaJSONTools/issues)
-- 功能建议：[Discussions](https://github.com/your-username/NezhaJSONTools/discussions)
+感谢所有为这个项目做出贡献的开发者和用户！
 
 ---
 
-**Nezha JSON Tools** - 让 JSON 配置生成变得简单高效！ 🚀
+**Nezha Panel Tools** - 让 Nezha 监控配置更简单！

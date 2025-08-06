@@ -225,10 +225,19 @@ function showToast(message) {
 
 // 处理键盘快捷键
 function handleKeyboardShortcuts(event) {
-    // Ctrl/Cmd + C 复制JSON
+    // Ctrl/Cmd + C 复制JSON - 只在没有选中文本或选中的是JSON代码区域时才拦截
     if ((event.ctrlKey || event.metaKey) && event.key === 'c' && !event.target.matches('input, textarea')) {
-        event.preventDefault();
-        copyCode(event);
+        const selection = window.getSelection();
+        const selectedText = selection.toString().trim();
+        
+        // 只有在没有选中任何文本，或者选中的文本来自JSON代码区域时才拦截
+        if (!selectedText || (selection.anchorNode && selection.anchorNode.parentElement && 
+            (selection.anchorNode.parentElement.id === 'jsonCode' || 
+             selection.anchorNode.parentElement.closest('#jsonCode')))) {
+            event.preventDefault();
+            copyCode(event);
+        }
+        // 如果用户选中了其他文本，让浏览器执行默认的复制行为
     }
     
     // Ctrl/Cmd + R 刷新配置
