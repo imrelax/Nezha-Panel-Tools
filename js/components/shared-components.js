@@ -209,10 +209,11 @@ function createFooter() {
     siteAuthorLink.textContent = '本站作者';
     
     const aboutLink = document.createElement('a');
-    aboutLink.href = 'about.html';
+    aboutLink.href = 'https://nztools.xxxx.im';
     aboutLink.className = 'block text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors';
     aboutLink.setAttribute('data-key', 'siteAbout');
-    aboutLink.textContent = '本站说明';
+    aboutLink.setAttribute('target', '_blank');
+    aboutLink.textContent = '本站地址';
     
     siteLinksDiv.appendChild(siteSourceLink);
     siteLinksDiv.appendChild(siteAuthorLink);
