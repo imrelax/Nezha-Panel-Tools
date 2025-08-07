@@ -16,8 +16,8 @@
     <link rel="icon" type="image/png" href="css/ico.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 浏览器兼容性检查和Polyfills -->
-    <script src="js/core/polyfills.js"></script>
+    <!-- 统一核心文件 (包含 Tailwind 配置和浏览器兼容性检查) -->
+    <script src="js/core/unified-core.js"></script>
     <!-- 统计代码 -->
     <script defer src="https://na.xxxx.im/script.js" data-website-id="2f1ac940-605c-461c-8efd-f5ad2e13c7da"></script>
 </head>
@@ -30,9 +30,9 @@
         <div class="text-center mb-8">
             <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100 mb-4">
                 <span class="mr-2 md:mr-3 text-blue-500">🖥️</span>
-                <span data-key="serviceTitle">IP地址服务</span>
+                <span data-key="serviceTitle" data-module="service">IP地址服务</span>
             </h2>
-            <p class="text-sm md:text-base text-slate-600 dark:text-slate-400" data-key="serviceDescription">查看全国各地区运营商IP地址信息</p>
+            <p class="text-sm md:text-base text-slate-600 dark:text-slate-400" data-key="serviceDescription" data-module="service">查看全国各地区运营商IP地址信息</p>
         </div>
 
         <!-- 使用提示通栏 -->
@@ -41,13 +41,13 @@
                 <div class="flex items-center space-x-3">
                     <span class="text-blue-500 text-lg">💡</span>
                     <span class="text-sm md:text-base text-blue-700 dark:text-blue-300 font-medium">
-                        <span data-key="serviceHelpText">不知道如何使用本功能？</span>
+                        <span data-key="serviceHelpText" data-module="service">不知道如何使用本功能？</span>
                     </span>
                 </div>
                 <a href="https://www.gowall.net/479.html" target="_blank" rel="noopener noreferrer" 
                    class="inline-flex items-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-all duration-300 shadow-sm hover:shadow-md">
                     <span class="mr-2">📖</span>
-                    <span data-key="viewTutorial">查看教程</span>
+                    <span data-key="viewTutorial" data-module="service">查看教程</span>
                     <span class="ml-2 text-xs opacity-75">↗</span>
                 </a>
             </div>
@@ -60,10 +60,10 @@
                     <table class="w-full min-w-full" id="ipTable">
                         <thead>
                             <tr class="border-b border-slate-200 dark:border-slate-700">
-                                <th class="text-left py-3 md:py-4 px-2 md:px-4 font-semibold text-slate-900 dark:text-slate-100 text-sm md:text-base" data-key="region">地区</th>
-                                <th class="text-left py-3 md:py-4 px-2 md:px-4 font-semibold text-slate-900 dark:text-slate-100 text-sm md:text-base" data-key="unicom">联通</th>
-                                <th class="text-left py-3 md:py-4 px-2 md:px-4 font-semibold text-slate-900 dark:text-slate-100 text-sm md:text-base" data-key="mobile">移动</th>
-                                <th class="text-left py-3 md:py-4 px-2 md:px-4 font-semibold text-slate-900 dark:text-slate-100 text-sm md:text-base" data-key="telecom">电信</th>
+                                <th class="text-left py-3 md:py-4 px-2 md:px-4 font-semibold text-slate-900 dark:text-slate-100 text-sm md:text-base" data-key="region" data-module="service"></th>
+                <th class="text-left py-3 md:py-4 px-2 md:px-4 font-semibold text-slate-900 dark:text-slate-100 text-sm md:text-base" data-key="unicom" data-module="service"></th>
+                <th class="text-left py-3 md:py-4 px-2 md:px-4 font-semibold text-slate-900 dark:text-slate-100 text-sm md:text-base" data-key="mobile" data-module="service"></th>
+                <th class="text-left py-3 md:py-4 px-2 md:px-4 font-semibold text-slate-900 dark:text-slate-100 text-sm md:text-base" data-key="telecom" data-module="service"></th>
                             </tr>
                         </thead>
                         <tbody id="ipTableBody">
@@ -77,39 +77,52 @@
         <!-- 加载状态 -->
         <div id="loadingState" class="text-center py-8">
             <span class="text-2xl text-blue-500 mb-4">⏳</span>
-            <p class="text-slate-600 dark:text-slate-400" data-key="loading">加载中...</p>
+            <p class="text-slate-600 dark:text-slate-400" data-key="loading"></p>
         </div>
 
         <!-- 错误状态 -->
         <div id="errorState" class="text-center py-8 hidden">
             <span class="text-2xl text-red-500 mb-4">⚠️</span>
-            <p class="text-slate-600 dark:text-slate-400" data-key="loadError">加载失败，请稍后重试</p>
+            <p class="text-slate-600 dark:text-slate-400" data-key="loadError"></p>
         </div>
     </div>
 
     <!-- 复制成功提示将通过共享组件动态插入 -->
 
+    <!-- 引入多语言管理器 -->
+    <script src="js/i18n/cn.js"></script>
+    <script src="js/i18n/en.js"></script>
+    <script src="js/utils/common-utils.js"></script>
+    <script src="js/i18n/i18n-unified.js"></script>
+    
     <!-- 引入共享组件和主题脚本 -->
     <script src="js/components/shared-components.js"></script>
-<script src="js/core/core.js"></script>
+    <script src="js/core/core.js"></script>
     <script src="js/components/theme.js"></script>
+    <script src="js/utils.js"></script>
     <script src="js/pages/service.js"></script>
     
     <script>
-        // 初始化共享组件
-        initializeSharedComponents('service');
-        
-        // 初始化主题
-        initializeTheme();
-        
-        // 初始化语言
-        if (typeof setLanguage === 'function') {
-            const savedLanguage = localStorage.getItem('language') || 'zh';
-            setLanguage(savedLanguage);
-        }
-        
-        // 加载IP数据
-        loadIPData();
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                // 初始化统一翻译管理器
+                if (typeof unifiedI18nManager !== 'undefined') {
+                    await unifiedI18nManager.init();
+                }
+                
+                // 初始化共享组件
+                if (typeof initializeSharedComponents === 'function') {
+                    initializeSharedComponents('service');
+                }
+                
+                // 加载IP数据
+                if (typeof loadIPData === 'function') {
+                    loadIPData();
+                }
+            } catch (error) {
+                console.error('页面初始化失败:', error);
+            }
+        });
     </script>
 </body>
 </html>

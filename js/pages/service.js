@@ -1,12 +1,26 @@
 // 服务页面功能
 
+// 文件监听和自动刷新相关变量
+let lastModified = null;
+let refreshInterval = null;
+const REFRESH_INTERVAL = 3000; // 3秒检查一次
+
 // 直接使用fetch加载IP数据
 async function loadIPDataWithLoader() {
     try {
-        const response = await fetch('config/ip.json');
+        const response = await fetch('config/ip.json?t=' + Date.now()); // 添加时间戳避免缓存
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
+        
+        // 检查文件是否有更新
+        const currentModified = response.headers.get('last-modified');
+        if (currentModified && lastModified && currentModified !== lastModified) {
+            console.log('IP数据文件已更新，正在刷新...');
+            showUpdateNotification();
+        }
+        lastModified = currentModified;
+        
         const data = await response.json();
         validateIPData(data);
         return data;
@@ -54,16 +68,18 @@ function isValidIP(ip) {
 }
 
 // 加载IP数据
-async function loadIPData() {
+async function loadIPData(showLoading = true) {
     const loadingState = document.getElementById('loadingState');
     const errorState = document.getElementById('errorState');
     const ipTable = document.getElementById('ipTableContainer');
     
     try {
-        // 显示加载状态
-        loadingState.classList.remove('hidden');
-        errorState.classList.add('hidden');
-        ipTable.classList.add('hidden');
+        // 只在首次加载时显示加载状态
+        if (showLoading) {
+            loadingState.classList.remove('hidden');
+            errorState.classList.add('hidden');
+            ipTable.classList.add('hidden');
+        }
         
         // 使用资源加载器获取IP数据
         const data = await loadIPDataWithLoader();
@@ -74,6 +90,11 @@ async function loadIPData() {
         // 隐藏加载状态，显示表格
         loadingState.classList.add('hidden');
         ipTable.classList.remove('hidden');
+        
+        // 启动自动刷新（只在首次加载时启动）
+        if (showLoading && !refreshInterval) {
+            startAutoRefresh();
+        }
         
     } catch (error) {
         console.error('Error loading IP data:', error);
@@ -90,10 +111,54 @@ async function loadIPData() {
     }
     
     // 应用当前语言设置
-    if (typeof setLanguage === 'function') {
+    if (typeof i18nManager !== 'undefined' && i18nManager.setLanguage) {
         const currentLang = localStorage.getItem('language') || 'zh';
-        setLanguage(currentLang);
+        i18nManager.setLanguage(currentLang);
     }
+}
+
+// 启动自动刷新
+function startAutoRefresh() {
+    refreshInterval = setInterval(async () => {
+        try {
+            await loadIPData(false); // 静默刷新，不显示加载状态
+        } catch (error) {
+            console.error('自动刷新失败:', error);
+        }
+    }, REFRESH_INTERVAL);
+    
+    console.log('已启动自动刷新，每', REFRESH_INTERVAL / 1000, '秒检查一次文件更新');
+}
+
+// 停止自动刷新
+function stopAutoRefresh() {
+    if (refreshInterval) {
+        clearInterval(refreshInterval);
+        refreshInterval = null;
+        console.log('已停止自动刷新');
+    }
+}
+
+// 显示更新通知
+function showUpdateNotification() {
+    // 创建更新通知
+    const notification = document.createElement('div');
+    notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 flex items-center animate-slide-up';
+    notification.innerHTML = `
+        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+        </svg>
+        数据已更新
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // 3秒后自动移除通知
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.remove();
+        }
+    }, 3000);
 }
 
 // 获取用户友好的错误信息
@@ -169,31 +234,7 @@ function renderIPTable(data) {
 
 // 复制到剪贴板
 async function copyToClipboard(text) {
-    try {
-        await navigator.clipboard.writeText(text);
-        showCopyToast();
-    } catch (error) {
-        console.error('Failed to copy to clipboard:', error);
-        
-        // 降级方案：使用传统的复制方法
-        const textArea = document.createElement('textarea');
-        textArea.value = text;
-        textArea.style.position = 'fixed';
-        textArea.style.left = '-999999px';
-        textArea.style.top = '-999999px';
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        
-        try {
-            document.execCommand('copy');
-            showCopyToast();
-        } catch (fallbackError) {
-            console.error('Fallback copy failed:', fallbackError);
-        }
-        
-        document.body.removeChild(textArea);
-    }
+    commonUtils.copyToClipboard(text);
 }
 
 // 显示复制成功提示
@@ -204,11 +245,30 @@ function showCopyToast() {
 }
 
 // 导出函数（如果在Node.js环境中）
+// 页面卸载时清理定时器
+window.addEventListener('beforeunload', () => {
+    stopAutoRefresh();
+});
+
+// 页面隐藏时停止刷新，显示时恢复刷新
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        stopAutoRefresh();
+    } else {
+        if (!refreshInterval) {
+            startAutoRefresh();
+        }
+    }
+});
+
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         loadIPData,
         renderIPTable,
         copyToClipboard,
-        showCopyToast
+        showCopyToast,
+        startAutoRefresh,
+        stopAutoRefresh,
+        showUpdateNotification
     };
 }

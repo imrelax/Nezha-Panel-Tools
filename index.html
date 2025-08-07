@@ -16,8 +16,8 @@
     <link rel="icon" type="image/png" href="css/ico.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 浏览器兼容性检查和Polyfills -->
-    <script src="js/core/polyfills.js"></script>
+    <!-- 统一核心文件 (包含 Tailwind 配置和浏览器兼容性检查) -->
+    <script src="js/core/unified-core.js"></script>
     <!-- 统计代码 -->
     <script defer src="https://na.xxxx.im/script.js" data-website-id="2f1ac940-605c-461c-8efd-f5ad2e13c7da"></script>
 
@@ -27,6 +27,8 @@
     <!-- 导航栏和背景将通过共享组件动态插入 -->
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+
 
         <!-- 主内容区域 -->
         <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
@@ -40,11 +42,11 @@
                                 <div class="w-8 h-8 flex items-center justify-center mr-3">
                                     <span class="text-white text-sm">💳</span>
                                 </div>
-                                <span data-key="billingConfig">账单配置</span>
+                                <span data-key="billingConfig" data-module="index"></span>
                             </h3>
                             <div class="flex items-center space-x-2">
                                 <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" id="enableBilling" checked onchange="toggleSection('billing')" class="sr-only peer">
+                                    <input type="checkbox" id="enable-billing" checked onchange="toggleSection('billing')" class="sr-only peer">
                                     <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300/50 dark:peer-focus:ring-blue-800/50 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-gradient-to-r peer-checked:from-blue-500 peer-checked:to-purple-600"></div>
                                 </label>
 
@@ -52,36 +54,34 @@
                         </div>
                     </div>
                         
-                    <div class="card-content p-6 space-y-6" id="billingForm">
+                    <div class="card-content p-6 space-y-6" id="billing-form">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3" data-key="startDate">起始日期</label>
-                                <input type="datetime-local" id="startDate" onchange="updateBilling()" aria-label="起始日期" class="w-full px-4 py-3 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 transition-all duration-300">
+                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3" data-key="startDate" data-module="index"></label>
+                                <input type="datetime-local" id="start-date" onchange="updateBilling()" aria-label="起始日期" class="w-full px-4 py-3 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 transition-all duration-300">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3" data-key="endDate">结束日期</label>
-                                <div class="space-y-3">
-                                    <input type="datetime-local" id="endDate" onchange="updateBilling()" aria-label="结束日期" class="w-full px-4 py-3 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 transition-all duration-300">
-                                    <div class="flex justify-end">
-                                        <button class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg text-sm transition-all duration-300 shadow-sm hover:shadow-md" id="autoCalcBtn" onclick="triggerAutoCalculation()">
-                <span class="mr-2">🔢</span>
-                <span data-key="autoCalc">自动计算</span>
-            </button>
-                                    </div>
-                                </div>
+                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3" data-key="endDate" data-module="index"></label>
+                                <input type="datetime-local" id="end-date" onchange="updateBilling()" aria-label="结束日期" class="w-full px-4 py-3 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 transition-all duration-300">
                             </div>
                         </div>
 
-                        <div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
-                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300" data-key="autoRenewal">自动续费</label>
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" id="autoRenewal" checked onchange="updateBilling()" aria-label="自动续费开关" class="sr-only peer">
-                                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300/50 dark:peer-focus:ring-blue-800/50 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-gradient-to-r peer-checked:from-blue-500 peer-checked:to-purple-600"></div>
-                            </label>
+                        <div class="flex items-center justify-between p-4 rounded-lg">
+                            <div class="flex items-center gap-4">
+                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300" data-key="autoRenewal" data-module="index"></label>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" id="auto-renewal" checked onchange="updateBilling()" aria-label="自动续费开关" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300/50 dark:peer-focus:ring-blue-800/50 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-gradient-to-r peer-checked:from-blue-500 peer-checked:to-purple-600"></div>
+                                </label>
+                            </div>
+                            <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm transition-all duration-300 shadow-sm hover:shadow-md" id="auto-calc-btn" onclick="triggerAutoCalculation()">
+                                <span class="mr-2">🔢</span>
+                                <span data-key="autoCalc" data-module="index"></span>
+                            </button>
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3" data-key="billingCycle">计费周期</label>
+                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3" data-key="billingCycle" data-module="index"></label>
                             <div class="flex gap-3 items-center">
                                 <select id="cycle" onchange="updateBilling()" aria-label="计费周期" class="flex-1 px-4 py-3 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 transition-all duration-300">
                                     <option value="Day" data-zh="天（非官方）" data-en="Day (Unofficial)">天（非官方）</option>
@@ -96,31 +96,27 @@
                                     <option value="5Year" data-zh="5年（非官方）" data-en="5 Years (Unofficial)">5年（非官方）</option>
                                     <option value="Permanent" data-zh="永久（非官方）" data-en="Permanent (Unofficial)">永久（非官方）</option>
                                 </select>
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" id="cycleLanguage" onchange="updateCycleLanguage()" aria-label="切换英文显示" class="sr-only peer">
-                                    <div class="w-8 h-4 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300/50 dark:peer-focus:ring-blue-800/50 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-slate-600 peer-checked:bg-gradient-to-r peer-checked:from-blue-500 peer-checked:to-purple-600"></div>
-                                </label>
-                                <span class="text-sm text-slate-600 dark:text-slate-400" data-key="english">英文</span>
+
                             </div>
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3" data-key="amount">金额</label>
+                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3" data-key="amount" data-module="index"></label>
                             <div class="space-y-3">
-                                <select id="amountType" onchange="updateAmountType()" aria-label="金额类型" class="w-full px-4 py-3 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 transition-all duration-300">
+                                <select id="amount-type" onchange="updateAmountType()" aria-label="金额类型" class="w-full px-4 py-3 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 transition-all duration-300">
                                     <option value="billing" data-zh="计费" data-en="Billing">计费</option>
                                     <option value="free" data-zh="免费" data-en="Free">免费</option>
                                     <option value="payAsGo" data-zh="按量收费" data-en="Pay as Go">按量收费</option>
                                 </select>
-                                <div id="amountInputs" class="flex gap-2">
-                                    <input type="number" id="amountValue" value="50" onchange="updateBilling()" aria-label="金额数值" class="flex-1 px-4 py-3 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 transition-all duration-300">
+                                <div id="amount-inputs" class="flex gap-2">
+                                    <input type="number" id="amount-value" value="50" onchange="updateBilling()" aria-label="金额数值" class="flex-1 px-4 py-3 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 transition-all duration-300">
                                     <select id="currency" onchange="updateBilling()" aria-label="货币类型" class="px-4 py-3 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 transition-all duration-300">
                                         <option value="CNY" selected>CNY</option>
                                         <option value="USD">USD</option>
                                         <option value="EUR">EUR</option>
                                         <option value="GBP">GBP</option>
                                     </select>
-                                    <select id="currencyFormat" onchange="updateBilling()" aria-label="货币格式" class="px-4 py-3 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 transition-all duration-300">
+                                    <select id="currency-format" onchange="updateBilling()" aria-label="货币格式" class="px-4 py-3 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 transition-all duration-300">
                                         <option value="before">50CNY</option>
                                         <option value="symbol_before">¥50</option>
                                         <option value="after">50¥</option>
@@ -139,11 +135,11 @@
                                 <div class="w-8 h-8 flex items-center justify-center mr-3">
                                     <span class="text-white text-sm">📦</span>
                                 </div>
-                                <span data-key="planConfig">套餐配置</span>
+                                <span data-key="planConfig" data-module="index"></span>
                             </h3>
                             <div class="flex items-center space-x-2">
                                 <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" id="enablePlan" checked onchange="toggleSection('plan')" class="sr-only peer">
+                                    <input type="checkbox" id="enable-plan" checked onchange="toggleSection('plan')" class="sr-only peer">
                                     <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300/50 dark:peer-focus:ring-blue-800/50 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-gradient-to-r peer-checked:from-blue-500 peer-checked:to-purple-600"></div>
                                 </label>
     
@@ -151,12 +147,12 @@
                         </div>
                     </div>
                         
-                        <div class="card-content p-6 space-y-6" id="planForm">
+                        <div class="card-content p-6 space-y-6" id="plan-form">
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3" data-key="bandwidth">带宽</label>
+                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3" data-key="bandwidth" data-module="index"></label>
                                 <div class="flex gap-3">
-                                    <input type="number" id="bandwidthValue" value="500" onchange="updatePlan()" class="flex-1 px-4 py-3 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 transition-all duration-300">
-                                    <select id="bandwidthUnit" onchange="updateBandwidthUnit()" class="px-4 py-3 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 transition-all duration-300">
+                                    <input type="number" id="bandwidth-value" value="500" onchange="updatePlan()" class="flex-1 px-4 py-3 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 transition-all duration-300">
+                                    <select id="bandwidth-unit" onchange="updateBandwidthUnit()" class="px-4 py-3 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 transition-all duration-300">
                                         <option value="Mbps" selected>Mbps</option>
                                         <option value="Gbps">Gbps</option>
                                         <option value="Unlimited" data-zh="无限制" data-en="Unlimited">无限制</option>
@@ -165,10 +161,10 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3" data-key="trafficVolume">流量配额</label>
+                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3" data-key="trafficVolume" data-module="index"></label>
                                 <div class="flex gap-3 items-center flex-wrap">
                                     <div class="flex gap-3 flex-1 min-w-0">
-                                        <input type="number" id="trafficValue" value="1000" onchange="updatePlan()" class="flex-1 px-4 py-3 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 transition-all duration-300">
+                                        <input type="number" id="traffic-value" value="1000" onchange="updatePlan()" class="flex-1 px-4 py-3 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 transition-all duration-300">
                                         <select id="trafficUnit" onchange="updateTrafficUnit()" class="px-4 py-3 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 transition-all duration-300">
                                             <option value="MB">MB</option>
                                             <option value="GB">GB</option>
@@ -185,16 +181,12 @@
                                         <option value="Year" data-zh="年" data-en="Year">年</option>
                                         <option value="Unlimited" data-zh="无限" data-en="Unlimited">无限</option>
                                     </select>
-                                    <label class="relative inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" id="trafficLanguage" onchange="updateTrafficLanguage()" class="sr-only peer">
-                                        <div class="w-8 h-4 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300/50 dark:peer-focus:ring-blue-800/50 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-slate-600 peer-checked:bg-gradient-to-r peer-checked:from-blue-500 peer-checked:to-purple-600"></div>
-                                    </label>
-                                    <span class="text-sm text-slate-600 dark:text-slate-400" data-key="english">英文</span>
+
                                 </div>
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3" data-key="trafficType">流量类型</label>
+                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3" data-key="trafficType" data-module="index"></label>
                                 <select id="trafficType" onchange="updatePlan()" class="w-full px-4 py-3 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 transition-all duration-300">
                                     <option value="1" data-zh="入站" data-en="Inbound">入站</option>
                                     <option value="2" selected data-zh="双向" data-en="Bidirectional">双向</option>
@@ -214,14 +206,27 @@
 
                             <div>
                                 <div class="flex items-center justify-between mb-3">
-                                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300" data-key="networkRoute">网络路由</label>
-                                    <a href="https://www.boce.com/traceroute" target="_blank" class="text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300 text-sm font-medium">【路由查询】</a>
+                                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300" data-key="networkRoute" data-module="index"></label>
+                                    <a href="https://www.boce.com/traceroute" target="_blank" class="text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300 text-sm font-medium">【<span data-key="routeQuery" data-module="service"></span>】</a>
                                 </div>
                                 <input type="text" id="networkRoute" value="4837" onchange="updatePlan()" class="w-full px-4 py-3 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 transition-all duration-300">
+                                <div class="mt-3">
+                                    <div class="flex flex-wrap gap-2" id="routeOptionsContainer">
+                                        <button type="button" onclick="addRouteOption('163')" class="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-blue-100 dark:hover:bg-blue-900 hover:text-blue-800 dark:hover:text-blue-200 px-3 py-1 rounded-full text-sm transition-all duration-300 border border-slate-200 dark:border-slate-600">163</button>
+                                        <button type="button" onclick="addRouteOption('CN2')" class="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-blue-100 dark:hover:bg-blue-900 hover:text-blue-800 dark:hover:text-blue-200 px-3 py-1 rounded-full text-sm transition-all duration-300 border border-slate-200 dark:border-slate-600">CN2</button>
+                                        <button type="button" onclick="addRouteOption('CN2GIA')" class="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-blue-100 dark:hover:bg-blue-900 hover:text-blue-800 dark:hover:text-blue-200 px-3 py-1 rounded-full text-sm transition-all duration-300 border border-slate-200 dark:border-slate-600">CN2GIA</button>
+                                        <button type="button" onclick="addRouteOption('CMI')" class="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-blue-100 dark:hover:bg-blue-900 hover:text-blue-800 dark:hover:text-blue-200 px-3 py-1 rounded-full text-sm transition-all duration-300 border border-slate-200 dark:border-slate-600">CMI</button>
+                                        <button type="button" onclick="addRouteOption('CMIN2')" class="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-blue-100 dark:hover:bg-blue-900 hover:text-blue-800 dark:hover:text-blue-200 px-3 py-1 rounded-full text-sm transition-all duration-300 border border-slate-200 dark:border-slate-600">CMIN2</button>
+                                        <button type="button" onclick="addRouteOption('4837')" class="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-blue-100 dark:hover:bg-blue-900 hover:text-blue-800 dark:hover:text-blue-200 px-3 py-1 rounded-full text-sm transition-all duration-300 border border-slate-200 dark:border-slate-600">4837</button>
+                                        <button type="button" onclick="addRouteOption('10099')" class="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-blue-100 dark:hover:bg-blue-900 hover:text-blue-800 dark:hover:text-blue-200 px-3 py-1 rounded-full text-sm transition-all duration-300 border border-slate-200 dark:border-slate-600">10099</button>
+                                        <button type="button" onclick="addRouteOption('IEPL')" class="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-blue-100 dark:hover:bg-blue-900 hover:text-blue-800 dark:hover:text-blue-200 px-3 py-1 rounded-full text-sm transition-all duration-300 border border-slate-200 dark:border-slate-600">IEPL</button>
+                                        <button type="button" onclick="addRouteOption('IPLC')" class="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-blue-100 dark:hover:bg-blue-900 hover:text-blue-800 dark:hover:text-blue-200 px-3 py-1 rounded-full text-sm transition-all duration-300 border border-slate-200 dark:border-slate-600">IPLC</button>
+                                    </div>
+                                </div>
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3" data-key="extraTags">额外标签</label>
+                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3" data-key="extraTags" data-module="index"></label>
                                 <div class="space-y-3">
                                     <div class="flex flex-wrap gap-2" id="tagsContainer">
                                         <div class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm flex items-center space-x-2">
@@ -252,16 +257,16 @@
                                 <div class="w-8 h-8 flex items-center justify-center mr-3">
                                     <span class="text-white text-sm">💻</span>
                                 </div>
-                                <span data-key="jsonConfig">JSON 配置</span>
+                                <span data-key="jsonConfig" data-module="index"></span>
                             </h3>
                             <div class="flex items-center space-x-2">
                                 <button class="bg-orange-500 hover:bg-orange-600 text-white px-3 py-2 rounded-lg text-sm transition-all duration-300 shadow-sm hover:shadow-md" onclick="refreshFromCode(event)">
                                     <span class="mr-2">🔄</span>
-                                    <span data-key="refresh">刷新</span>
+                                    <span data-key="refresh" data-module="common"></span>
                                 </button>
                                 <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-lg text-sm transition-all duration-300 shadow-sm hover:shadow-md" onclick="copyCode(event)">
                                     <span class="mr-2">📋</span>
-                                    <span data-key="copy">复制</span>
+                                    <span data-key="copy" data-module="common"></span>
                                 </button>
     
                             </div>
@@ -278,9 +283,96 @@
 
     </div>
 
+    <!-- 网络线路类型说明 -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+        <div class="bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-2xl border border-slate-200/50 dark:border-slate-700/50 overflow-hidden hover:shadow-xl transition-all duration-300">
+            <div class="p-6 border-b border-slate-200/50 dark:border-slate-700/50 cursor-pointer hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors duration-300" onclick="toggleCardCollapse(this)">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 flex items-center">
+                        <div class="w-8 h-8 flex items-center justify-center mr-3">
+                            <span class="text-white text-sm">🌐</span>
+                        </div>
+                        <span data-key="networkLineTypes" data-module="index"></span>
+                    </h3>
+                    <div class="collapse-icon transform transition-transform duration-300">
+                        <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="card-content p-6">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-slate-200 dark:border-slate-700">
+                                <th class="text-left py-3 px-4 font-semibold text-slate-900 dark:text-slate-100" data-key="lineTypeLabel" data-module="index">标签</th>
+                                <th class="text-left py-3 px-4 font-semibold text-slate-900 dark:text-slate-100" data-key="lineTypeMeaning" data-module="index">含义</th>
+                                <th class="text-left py-3 px-4 font-semibold text-slate-900 dark:text-slate-100" data-key="lineTypeScenario" data-module="index">适用场景</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 dark:divide-slate-700">
+                            <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors duration-200">
+                                <td class="py-3 px-4 font-mono text-blue-600 dark:text-blue-400 font-semibold">163</td>
+                                <td class="py-3 px-4 text-slate-700 dark:text-slate-300" data-key="lineType163" data-module="index"></td>
+                                <td class="py-3 px-4 text-slate-600 dark:text-slate-400" data-key="lineType163Desc" data-module="index"></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors duration-200">
+                                <td class="py-3 px-4 font-mono text-blue-600 dark:text-blue-400 font-semibold">CN2</td>
+                                <td class="py-3 px-4 text-slate-700 dark:text-slate-300" data-key="lineTypeCN2" data-module="index"></td>
+                                <td class="py-3 px-4 text-slate-600 dark:text-slate-400" data-key="lineTypeCN2Desc" data-module="index"></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors duration-200">
+                                <td class="py-3 px-4 font-mono text-blue-600 dark:text-blue-400 font-semibold">CN2GIA</td>
+                                <td class="py-3 px-4 text-slate-700 dark:text-slate-300" data-key="lineTypeCN2GIA" data-module="index"></td>
+                                <td class="py-3 px-4 text-slate-600 dark:text-slate-400" data-key="lineTypeCN2GIADesc" data-module="index"></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors duration-200">
+                                <td class="py-3 px-4 font-mono text-blue-600 dark:text-blue-400 font-semibold">CMI</td>
+                                <td class="py-3 px-4 text-slate-700 dark:text-slate-300" data-key="lineTypeCMI" data-module="index"></td>
+                                <td class="py-3 px-4 text-slate-600 dark:text-slate-400" data-key="lineTypeCMIDesc" data-module="index"></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors duration-200">
+                                <td class="py-3 px-4 font-mono text-blue-600 dark:text-blue-400 font-semibold">CMIN2</td>
+                                <td class="py-3 px-4 text-slate-700 dark:text-slate-300" data-key="lineTypeCMIN2" data-module="index"></td>
+                                <td class="py-3 px-4 text-slate-600 dark:text-slate-400" data-key="lineTypeCMIN2Desc" data-module="index"></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors duration-200">
+                                <td class="py-3 px-4 font-mono text-blue-600 dark:text-blue-400 font-semibold">4837</td>
+                                <td class="py-3 px-4 text-slate-700 dark:text-slate-300" data-key="lineType4837" data-module="index"></td>
+                                <td class="py-3 px-4 text-slate-600 dark:text-slate-400" data-key="lineType4837Desc" data-module="index"></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors duration-200">
+                                <td class="py-3 px-4 font-mono text-blue-600 dark:text-blue-400 font-semibold">10099</td>
+                                <td class="py-3 px-4 text-slate-700 dark:text-slate-300" data-key="lineType10099" data-module="index"></td>
+                                <td class="py-3 px-4 text-slate-600 dark:text-slate-400" data-key="lineType10099Desc" data-module="index"></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors duration-200">
+                                <td class="py-3 px-4 font-mono text-blue-600 dark:text-blue-400 font-semibold">IEPL</td>
+                                <td class="py-3 px-4 text-slate-700 dark:text-slate-300" data-key="lineTypeIEPL" data-module="index"></td>
+                                <td class="py-3 px-4 text-slate-600 dark:text-slate-400" data-key="lineTypeIEPLDesc" data-module="index"></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors duration-200">
+                                <td class="py-3 px-4 font-mono text-blue-600 dark:text-blue-400 font-semibold">IPLC</td>
+                                <td class="py-3 px-4 text-slate-700 dark:text-slate-300" data-key="lineTypeIPLC" data-module="index"></td>
+                                <td class="py-3 px-4 text-slate-600 dark:text-slate-400" data-key="lineTypeIPLCDesc" data-module="index"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- 模态框和页脚将通过共享组件动态插入 -->
 
 
+    
+    <!-- 引入国际化系统 -->
+    <script src="js/i18n/cn.js"></script>
+    <script src="js/i18n/en.js"></script>
+    <script src="js/utils/common-utils.js"></script>
+    <script src="js/i18n/i18n-unified.js"></script>
     
     <!-- 引入共享组件和主题脚本 -->
     <script src="js/components/shared-components.js"></script>
@@ -294,12 +386,26 @@
     <script src="js/pages/app.js"></script>
     
 <script>
-    // 初始化共享组件
-    if (typeof initializeSharedComponents === 'function') {
-        initializeSharedComponents('index');
-    }
-    
-    eventManager.registerPageInitializer('index', initializeApp);
+    document.addEventListener('DOMContentLoaded', async function() {
+        try {
+            // 初始化统一翻译管理器
+            if (typeof unifiedI18nManager !== 'undefined') {
+                await unifiedI18nManager.init();
+            }
+            
+            // 初始化共享组件
+            if (typeof initializeSharedComponents === 'function') {
+                initializeSharedComponents('index');
+            }
+            
+            // 初始化页面功能
+            if (typeof initializeApp === 'function') {
+                initializeApp();
+            }
+        } catch (error) {
+            console.error('页面初始化失败:', error);
+        }
+    });
 </script>
     
 

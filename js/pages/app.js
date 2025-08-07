@@ -9,15 +9,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-function initializeApp() {
+async function initializeApp() {
     // 初始化主题 - 自动检测浏览器主题
     initializeTheme();
     
-    // 初始化语言
-    const savedLanguage = localStorage.getItem('language') || 'zh';
-    setLanguage(savedLanguage);
-    
-
+    // 初始化统一翻译管理器
+    if (typeof unifiedI18nManager !== 'undefined') {
+        await unifiedI18nManager.init();
+    } else {
+        console.warn('UnifiedI18nManager not found, using fallback language initialization');
+    }
     
     // 检查当前页面并初始化相应的功能
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
@@ -116,7 +117,6 @@ function handleFormChange(event) {
         case 'endDate':
         case 'autoRenewal':
         case 'cycle':
-        case 'cycleLanguage':
             updateBilling();
             break;
         case 'amountType':
@@ -137,16 +137,16 @@ function handleFormChange(event) {
         case 'trafficPeriod':
             updateTrafficUnit();
             break;
-        case 'trafficLanguage':
-            updateTrafficLanguage();
-            break;
+
         case 'trafficType':
+            updatePlan();
+            break;
         case 'ipv4':
         case 'ipv6':
         case 'networkRoute':
+        case 'extraTags':
             updatePlan();
-            break;
-        default:
+            break;     default:
             // 通用更新
             if (element.closest('#billingForm')) {
                 updateBilling();
@@ -159,68 +159,13 @@ function handleFormChange(event) {
 // 复制JSON代码函数
 function copyCode(event) {
     event.stopPropagation();
-    const textarea = document.getElementById('jsonCode');
-    if (!textarea) {
-        showToast('复制失败：未找到JSON代码区域');
-        return;
-    }
-    
-    if (!textarea.value.trim()) {
-        showToast('复制失败：JSON代码为空');
-        return;
-    }
-    
-    textarea.select();
-    try {
-        if (navigator.clipboard && window.isSecureContext) {
-            navigator.clipboard.writeText(textarea.value).then(() => {
-                showToast('复制成功！');
-            }).catch(err => {
-                console.error('Clipboard API failed:', err);
-                // 降级到document.execCommand
-                if (document.execCommand('copy')) {
-                    showToast('复制成功！');
-                } else {
-                    showToast('复制失败，请手动复制');
-                }
-            });
-        } else {
-            // 降级到document.execCommand
-            if (document.execCommand('copy')) {
-                showToast('复制成功！');
-            } else {
-                showToast('复制失败，请手动复制');
-            }
-        }
-    } catch (err) {
-        console.error('Copy failed:', err);
-        showToast('发生错误，请手动复制');
-    }
+    const jsonCode = document.getElementById('jsonCode').value;
+    commonUtils.copyToClipboard(jsonCode);
 }
 
 // 显示提示消息
-function showToast(message) {
-    const toast = document.getElementById('copyToast');
-    if (toast) {
-        const messageSpan = toast.querySelector('span[data-key="copySuccess"]');
-        if (messageSpan) {
-            messageSpan.textContent = message;
-        }
-        
-        toast.classList.remove('hidden', 'translate-x-full');
-        toast.classList.add('translate-x-0');
-        
-        setTimeout(() => {
-            toast.classList.remove('translate-x-0');
-            toast.classList.add('translate-x-full');
-            setTimeout(() => {
-                toast.classList.add('hidden');
-            }, 300);
-        }, 2000);
-    } else {
-        // 降级到alert
-        alert(message);
-    }
+function showToast(message, type = 'success') {
+    commonUtils.showToast(message, type);
 }
 
 // 处理键盘快捷键
@@ -358,8 +303,8 @@ function restoreAppState() {
         }
         
         // 恢复语言
-        if (savedState.language) {
-            setLanguage(savedState.language);
+        if (savedState.language && typeof i18nManager !== 'undefined' && i18nManager.setLanguage) {
+            i18nManager.setLanguage(savedState.language);
         }
         
 
@@ -401,6 +346,29 @@ function initPerformanceMonitoring() {
     }
 }
 
+// 更新金额类型显示逻辑
+function updateAmountType() {
+    const amountType = document.getElementById('amountType');
+    const amountInputs = document.getElementById('amountInputs');
+    
+    // 根据选择的类型显示或隐藏金额输入框
+    if (amountType && amountInputs) {
+        const selectedValue = amountType.value;
+        if (selectedValue === 'free') {
+            amountInputs.style.display = 'none';
+        } else {
+            amountInputs.style.display = 'flex';
+        }
+    }
+    
+    // 更新账单配置
+    if (typeof updateBilling === 'function') {
+        updateBilling();
+    }
+}
+
+
+
 // 初始化性能监控
 initPerformanceMonitoring();
 
@@ -415,6 +383,7 @@ if (typeof module !== 'undefined' && module.exports) {
         showToast,
         handleKeyboardShortcuts,
         restoreAppState,
-        checkAppVersion
+        checkAppVersion,
+        updateAmountType
     };
 }

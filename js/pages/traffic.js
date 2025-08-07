@@ -6,8 +6,11 @@ function initializeTrafficPage() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // script.js已经包含了主题的初始化
-    initializeTraffic();
+    if (typeof initializePage === 'function') {
+        initializePage(initializeTraffic, { initTheme: false }); // 主题已在其他地方初始化
+    } else {
+        initializeTraffic();
+    }
 });
 
 function initializeTraffic() {
@@ -60,8 +63,8 @@ function updateTrafficRule() {
 // 刷新数据到初始状态
 function refreshTrafficData(event) {
     event.stopPropagation();
-    try {
-        // 重置所有表单字段到初始值
+    
+    function resetTrafficForm() {
         document.getElementById('ruleType').value = 'monthly';
         document.getElementById('minValue').value = '';
         document.getElementById('minUnit').value = '1073741824'; // 1GB
@@ -76,77 +79,15 @@ function refreshTrafficData(event) {
         document.getElementById('cycleUnit').value = 'month';
         document.getElementById('cover').checked = false;
         document.getElementById('ignoreList').value = '';
-        
-        // 更新JSON输出
-        updateTrafficRule();
-        
-        // 显示成功提示
-        if (typeof showToast === 'function') {
-            showToast('刷新成功！');
-        }
-    } catch (error) {
-        console.error('Refresh failed:', error);
-        if (typeof showToast === 'function') {
-            showToast('刷新失败，请检查页面');
-        }
     }
+    
+    refreshData(resetTrafficForm, updateTrafficRule);
 }
 
 function copyTrafficCode(event) {
     event.stopPropagation();
-    const textarea = document.getElementById('trafficJson');
-    if (!textarea) {
-        if (typeof showToast === 'function') {
-            showToast('复制失败：未找到JSON代码区域');
-        }
-        return;
-    }
-    
-    if (!textarea.value.trim()) {
-        if (typeof showToast === 'function') {
-            showToast('复制失败：JSON代码为空');
-        }
-        return;
-    }
-    
-    textarea.select();
-    try {
-        if (navigator.clipboard && window.isSecureContext) {
-            navigator.clipboard.writeText(textarea.value).then(() => {
-                if (typeof showToast === 'function') {
-                    showToast('复制成功！');
-                }
-            }).catch(err => {
-                console.error('Clipboard API failed:', err);
-                // 降级到document.execCommand
-                if (document.execCommand('copy')) {
-                    if (typeof showToast === 'function') {
-                        showToast('复制成功！');
-                    }
-                } else {
-                    if (typeof showToast === 'function') {
-                        showToast('复制失败，请手动复制');
-                    }
-                }
-            });
-        } else {
-            // 降级到document.execCommand
-            if (document.execCommand('copy')) {
-                if (typeof showToast === 'function') {
-                    showToast('复制成功！');
-                }
-            } else {
-                if (typeof showToast === 'function') {
-                    showToast('复制失败，请手动复制');
-                }
-            }
-        }
-    } catch (err) {
-        console.error('Copy failed:', err);
-        if (typeof showToast === 'function') {
-            showToast('发生错误，请手动复制');
-        }
-    }
+    const trafficJson = document.getElementById('trafficJson').value;
+    commonUtils.copyToClipboard(trafficJson);
 }
 
 // 模块导出（如果在模块环境中）

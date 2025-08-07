@@ -5,8 +5,8 @@
 // 节的开关
 function toggleSection(section) {
     try {
-        const checkbox = document.getElementById(`enable${section.charAt(0).toUpperCase() + section.slice(1)}`);
-        const form = document.getElementById(`${section}Form`);
+        const checkbox = document.getElementById(`enable-${section}`);
+        const form = document.getElementById(`${section}-form`);
         
         if (!checkbox || !form) {
             console.warn(`Elements not found for section: ${section}`);
@@ -27,7 +27,7 @@ function toggleSection(section) {
             form.classList.add('hidden');
         }
         
-        handleSectionToggle(`${section}Form`, isChecked);
+        handleSectionToggle(`${section}-form`, isChecked);
         
         if (typeof updateJsonCode === 'function') {
             updateJsonCode();
@@ -131,11 +131,19 @@ function calculateEndDate() {
         
         endDate.setDate(endDate.getDate() - 1);
         
-        const year = endDate.getFullYear();
-        const month = String(endDate.getMonth() + 1).padStart(2, '0');
-        const day = String(endDate.getDate()).padStart(2, '0');
-        
-        endDateInput.value = `${year}-${month}-${day}`;
+        // 使用与startDate相同的格式化函数
+        if (typeof formatDateTimeLocal === 'function') {
+            endDateInput.value = formatDateTimeLocal(endDate);
+        } else {
+            console.error('formatDateTimeLocal function not available');
+            // 回退到手动格式化
+            const year = endDate.getFullYear();
+            const month = String(endDate.getMonth() + 1).padStart(2, '0');
+            const day = String(endDate.getDate()).padStart(2, '0');
+            const hours = String(endDate.getHours()).padStart(2, '0');
+            const minutes = String(endDate.getMinutes()).padStart(2, '0');
+            endDateInput.value = `${year}-${month}-${day}T${hours}:${minutes}`;
+        }
         
         updateBilling();
     } catch (error) {
@@ -146,9 +154,9 @@ function calculateEndDate() {
 // 更新账单配置
 function updateBilling() {
     try {
-        const startDate = document.getElementById('startDate')?.value || '';
-        const endDate = document.getElementById('endDate')?.value || '';
-        const autoRenewal = document.getElementById('autoRenewal')?.checked || false;
+        const startDate = document.getElementById('start-date')?.value || '';
+        const endDate = document.getElementById('end-date')?.value || '';
+        const autoRenewal = document.getElementById('auto-renewal')?.checked || false;
         const cycle = getCycleValue();
         const amount = getAmountValue();
         
@@ -198,10 +206,23 @@ function updatePlan() {
         const trafficVol = getTrafficVolValue();
         const networkRoute = document.getElementById('networkRoute')?.value || '';
         
+        // 收集额外标签
+        const tagsContainer = document.getElementById('tagsContainer');
+        let extraTags = '';
+        if (tagsContainer) {
+            const tagDivs = tagsContainer.querySelectorAll('div');
+            const tags = Array.from(tagDivs).map(div => {
+                const textSpan = div.querySelector('span:first-child');
+                return textSpan ? textSpan.textContent.trim() : '';
+            }).filter(tag => tag && tag !== '✕');
+            extraTags = tags.join(', ');
+        }
+        
         state.config.planDataMod = {
             bandwidth,
             trafficVol,
-            networkRoute
+            networkRoute,
+            extra: extraTags
         };
         
         if (typeof updateJsonCode === 'function') {
@@ -243,16 +264,19 @@ function getTrafficVolValue() {
 
 // 切换卡片折叠状态
 function toggleCardCollapse(header) {
-    const card = header.closest('.bg-white\/70, .bg-slate-800\/70') || header.parentElement;
+    const card = header.closest('[class*="bg-white"], [class*="bg-slate-800"]') || header.parentElement;
     const content = card.querySelector('.card-content');
+    const icon = header.querySelector('.collapse-icon');
     const isCollapsed = content.style.display === 'none';
     
     if (isCollapsed) {
         content.style.display = 'block';
         header.classList.remove('opacity-60');
+        if (icon) icon.style.transform = 'rotate(0deg)';
     } else {
         content.style.display = 'none';
         header.classList.add('opacity-60');
+        if (icon) icon.style.transform = 'rotate(-90deg)';
     }
 }
 
@@ -300,13 +324,23 @@ function addTag() {
     
     tagsContainer.appendChild(tagElement);
     newTagInput.value = '';
+    
+    // 更新JSON
+    if (typeof updatePlan === 'function') {
+        updatePlan();
+    }
 }
 
 // 移除标签
 function removeTag(button) {
-    const tagElement = button.closest('div');
+    const tagElement = button.parentElement;
     if (tagElement) {
         tagElement.remove();
+        
+        // 更新JSON
+        if (typeof updatePlan === 'function') {
+            updatePlan();
+        }
     }
 }
 
@@ -315,6 +349,54 @@ function handleTagInput(event) {
     if (event.key === 'Enter') {
         event.preventDefault();
         addTag();
+    }
+}
+
+// 添加网络路由选项
+function addRouteOption(routeValue) {
+    try {
+        const networkRouteInput = document.getElementById('networkRoute');
+        if (!networkRouteInput) {
+            console.warn('Network route input not found');
+            return;
+        }
+        
+        const currentValue = networkRouteInput.value.trim();
+        let newValue = '';
+        
+        if (currentValue === '') {
+            // 如果输入框为空，直接设置新值
+            newValue = routeValue;
+        } else {
+            // 如果输入框有值，检查是否已存在该值
+            const currentRoutes = currentValue.split(/[,，\s]+/).filter(route => route.length > 0);
+            
+            if (!currentRoutes.includes(routeValue)) {
+                // 如果不存在，添加到末尾
+                currentRoutes.push(routeValue);
+                newValue = currentRoutes.join(', ');
+            } else {
+                // 如果已存在，不做任何操作
+                return;
+            }
+        }
+        
+        networkRouteInput.value = newValue;
+        
+        // 触发change事件以更新JSON
+        if (typeof updatePlan === 'function') {
+            updatePlan();
+        }
+        
+        // 显示提示
+        if (typeof showToast === 'function') {
+            showToast(`已添加网络路由: ${routeValue}`);
+        }
+    } catch (error) {
+        console.error('Error in addRouteOption:', error);
+        if (typeof showToast === 'function') {
+            showToast('添加网络路由时发生错误');
+        }
     }
 }
 
@@ -399,7 +481,10 @@ function validateConfig(config) {
 // 验证日期格式
 function isValidDate(dateString) {
     const date = new Date(dateString);
-    return !isNaN(date.getTime()) && dateString.match(/^\d{4}-\d{2}-\d{2}$/);
+    // 支持 YYYY-MM-DD 和 YYYY-MM-DDTHH:MM 格式
+    const dateOnlyPattern = /^\d{4}-\d{2}-\d{2}$/;
+    const dateTimePattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/;
+    return !isNaN(date.getTime()) && (dateString.match(dateOnlyPattern) || dateString.match(dateTimePattern));
 }
 
 // 安全的JSON解析
@@ -491,18 +576,227 @@ function refreshFromCode(event) {
         }
         
         if (typeof showToast === 'function') {
-            showToast('配置已从JSON代码更新', 'success');
+            const successMessage = window.unifiedI18nManager ? 
+                window.unifiedI18nManager.__('refreshSuccess') : '配置已从JSON代码更新';
+            showToast(successMessage, 'success');
         }
         
     } catch (error) {
         console.error('Error refreshing from code:', error);
         if (typeof showToast === 'function') {
-            showToast('刷新配置时发生错误', 'error');
+            const errorMessage = window.unifiedI18nManager ? 
+                window.unifiedI18nManager.__('refreshFailed') : '刷新配置时发生错误';
+            showToast(errorMessage, 'error');
         }
     }
 }
 
 // 导出函数
+// ==================== 通用工具函数部分 ====================
+
+/**
+ * 通用复制到剪贴板函数
+ * @param {string} textareaId - 要复制的textarea元素ID
+ * @param {string} successMessage - 成功提示消息
+ * @param {string} emptyMessage - 内容为空时的提示消息
+ * @param {string} errorMessage - 错误时的提示消息
+ */
+function copyToClipboard(textareaId, successMessage = '复制成功！', emptyMessage = '复制失败：内容为空', errorMessage = '复制失败，请手动复制') {
+    const textarea = document.getElementById(textareaId);
+    if (!textarea) {
+        if (typeof showToast === 'function') {
+            showToast('复制失败：未找到目标区域');
+        }
+        return false;
+    }
+    
+    if (!textarea.value.trim()) {
+        if (typeof showToast === 'function') {
+            showToast(emptyMessage);
+        }
+        return false;
+    }
+    
+    textarea.select();
+    try {
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(textarea.value).then(() => {
+                if (typeof showToast === 'function') {
+                    showToast(successMessage);
+                }
+            }).catch(err => {
+                console.error('Clipboard API failed:', err);
+                // 降级到document.execCommand
+                if (document.execCommand('copy')) {
+                    if (typeof showToast === 'function') {
+                        showToast(successMessage);
+                    }
+                } else {
+                    if (typeof showToast === 'function') {
+                        showToast(errorMessage);
+                    }
+                }
+            });
+        } else {
+            // 降级到document.execCommand
+            if (document.execCommand('copy')) {
+                if (typeof showToast === 'function') {
+                    showToast(successMessage);
+                }
+            } else {
+                if (typeof showToast === 'function') {
+                    showToast(errorMessage);
+                }
+            }
+        }
+        return true;
+    } catch (err) {
+        console.error('Copy failed:', err);
+        if (typeof showToast === 'function') {
+            showToast('发生错误，请手动复制');
+        }
+        return false;
+    }
+}
+
+/**
+ * 通用刷新数据函数
+ * @param {Function} resetFunction - 重置表单数据的函数
+ * @param {Function} updateFunction - 更新输出的函数
+ * @param {string} successMessage - 成功提示消息
+ * @param {string} errorMessage - 错误提示消息
+ */
+function refreshData(resetFunction, updateFunction, successMessage, errorMessage) {
+    // 使用翻译系统获取默认消息
+    if (!successMessage) {
+        successMessage = window.unifiedI18nManager ? 
+            window.unifiedI18nManager.__('refreshSuccess') : '刷新成功！';
+    }
+    if (!errorMessage) {
+        errorMessage = window.unifiedI18nManager ? 
+            window.unifiedI18nManager.__('refreshFailed') : '刷新失败，请检查页面';
+    }
+    try {
+        if (typeof resetFunction === 'function') {
+            resetFunction();
+        }
+        if (typeof updateFunction === 'function') {
+            updateFunction();
+        }
+        if (typeof showToast === 'function') {
+            showToast(successMessage);
+        }
+        return true;
+    } catch (error) {
+        console.error('Refresh failed:', error);
+        if (typeof showToast === 'function') {
+            showToast(errorMessage);
+        }
+        return false;
+    }
+}
+
+/**
+ * 通用页面初始化函数
+ * @param {Function} initFunction - 页面特定的初始化函数
+ * @param {Object} options - 初始化选项
+ */
+function initializePage(initFunction, options = {}) {
+    try {
+        // 初始化主题（如果需要）
+        if (options.initTheme !== false && typeof initializeTheme === 'function') {
+            initializeTheme();
+        }
+        
+        // 初始化多语言（如果需要）
+        if (options.initI18n !== false && typeof i18nManager !== 'undefined') {
+            const savedLanguage = localStorage.getItem('language') || 'zh';
+            if (i18nManager.setLanguage) {
+                i18nManager.setLanguage(savedLanguage);
+            }
+        }
+        
+        // 执行页面特定的初始化
+        if (typeof initFunction === 'function') {
+            initFunction();
+        }
+        
+        return true;
+    } catch (error) {
+        console.error('Page initialization failed:', error);
+        return false;
+    }
+}
+
+/**
+ * 防抖函数
+ * @param {Function} func - 要防抖的函数
+ * @param {number} wait - 等待时间（毫秒）
+ * @param {boolean} immediate - 是否立即执行
+ */
+function debounce(func, wait, immediate) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            timeout = null;
+            if (!immediate) func(...args);
+        };
+        const callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func(...args);
+    };
+}
+
+/**
+ * 节流函数
+ * @param {Function} func - 要节流的函数
+ * @param {number} limit - 限制时间（毫秒）
+ */
+function throttle(func, limit) {
+    let inThrottle;
+    return function(...args) {
+        if (!inThrottle) {
+            func.apply(this, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    };
+}
+
+/**
+ * 创建通用的函数代理
+ * @param {string} functionName - 函数名称
+ * @param {Function} fallback - 降级函数
+ */
+function createFunctionProxy(functionName, fallback) {
+    return function(...args) {
+        if (typeof window[functionName] === 'function') {
+            return window[functionName](...args);
+        } else if (typeof fallback === 'function') {
+            return fallback(...args);
+        } else {
+            console.warn(`函数 ${functionName} 不存在且没有提供降级方案`);
+        }
+    };
+}
+
+/**
+ * 创建模态框事件监听器
+ * @param {string} modalId - 模态框ID
+ * @param {Function} closeHandler - 关闭处理函数
+ */
+function setupModalEventListener(modalId, closeHandler) {
+    const modal = document.getElementById(modalId);
+    if (modal && typeof closeHandler === 'function') {
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeHandler();
+            }
+        });
+    }
+}
+
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         toggleSection,
@@ -515,15 +809,25 @@ if (typeof module !== 'undefined' && module.exports) {
         updatePlan,
         getBandwidthValue,
         getTrafficVolValue,
+        toggleCardCollapse,
         renderTags,
         addTag,
         removeTag,
         handleTagInput,
+        addRouteOption,
         handleCodeChange,
         updateJsonCode,
         validateConfig,
         isValidDate,
         safeJsonParse,
-        refreshFromCode
+        refreshFromCode,
+        // 新增的通用工具函数
+        copyToClipboard,
+        refreshData,
+        initializePage,
+        debounce,
+        throttle,
+        createFunctionProxy,
+        setupModalEventListener
     };
 }
