@@ -15,11 +15,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function initializeTraffic() {
     const now = new Date();
-    document.getElementById('cycleStart').value = formatLocal(now);
+    // 使用 commonUtils.formatDateTimeLocal
+    if (typeof commonUtils !== 'undefined' && commonUtils.formatDateTimeLocal) {
+        document.getElementById('cycleStart').value = commonUtils.formatDateTimeLocal(now);
+    } else {
+        // Fallback if commonUtils is not available
+        document.getElementById('cycleStart').value = formatLocalFallback(now);
+    }
     updateTrafficRule();
 }
 
-function formatLocal(date) {
+// Fallback function just in case
+function formatLocalFallback(date) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
@@ -73,7 +80,11 @@ function refreshTrafficData(event) {
         
         // 重置时间到当前时间
         const now = new Date();
-        document.getElementById('cycleStart').value = formatLocal(now);
+        if (typeof commonUtils !== 'undefined' && commonUtils.formatDateTimeLocal) {
+            document.getElementById('cycleStart').value = commonUtils.formatDateTimeLocal(now);
+        } else {
+            document.getElementById('cycleStart').value = formatLocalFallback(now);
+        }
         
         document.getElementById('cycleInterval').value = '1';
         document.getElementById('cycleUnit').value = 'month';
@@ -87,7 +98,18 @@ function refreshTrafficData(event) {
 function copyTrafficCode(event) {
     event.stopPropagation();
     const trafficJson = document.getElementById('trafficJson').value;
-    commonUtils.copyToClipboard(trafficJson);
+    if (typeof commonUtils !== 'undefined' && commonUtils.copyToClipboard) {
+        commonUtils.copyToClipboard(trafficJson);
+    } else {
+        // Fallback
+        const textarea = document.createElement('textarea');
+        textarea.value = trafficJson;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        alert('已复制');
+    }
 }
 
 // 模块导出（如果在模块环境中）
@@ -95,7 +117,6 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         initializeTrafficPage,
         initializeTraffic,
-        formatLocal,
         updateTrafficRule,
         refreshTrafficData,
         copyTrafficCode

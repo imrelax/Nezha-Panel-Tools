@@ -5,18 +5,25 @@ function createTechBackground() {
     const background = document.createElement('div');
     background.className = 'fixed inset-0 -z-10';
     
-    const gradientLayer = document.createElement('div');
-    gradientLayer.className = 'absolute inset-0 bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900';
+    // 基础背景层 - 使用新的深色系
+    const baseLayer = document.createElement('div');
+    baseLayer.className = 'absolute inset-0 bg-slate-50 dark:bg-slate-900 transition-colors duration-500';
     
+    // 装饰光晕 - 更加柔和现代
+    const glowLayer = document.createElement('div');
+    glowLayer.className = 'absolute top-0 left-0 w-full h-full overflow-hidden';
+    glowLayer.innerHTML = `
+        <div class="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-primary-400/20 dark:bg-primary-600/20 blur-[120px] animate-pulse-slow"></div>
+        <div class="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-secondary-400/20 dark:bg-secondary-600/20 blur-[120px] animate-pulse-slow" style="animation-delay: 2s;"></div>
+    `;
+    
+    // 网格纹理 - 更加细腻
     const gridLayer = document.createElement('div');
-    gridLayer.className = 'absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]';
+    gridLayer.className = 'absolute inset-0 bg-[url("data:image/svg+xml,%3Csvg width=\'20\' height=\'20\' viewBox=\'0 0 20 20\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'%239C92AC\' fill-opacity=\'0.05\' fill-rule=\'evenodd\'%3E%3Ccircle cx=\'3\' cy=\'3\' r=\'1\'/%3E%3Ccircle cx=\'13\' cy=\'13\' r=\'1\'/%3E%3C/g%3E%3C/svg%3E")]';
     
-    const blurLayer = document.createElement('div');
-    blurLayer.className = 'absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-slate-400 opacity-10 blur-[100px] dark:bg-slate-600';
-    
-    background.appendChild(gradientLayer);
+    background.appendChild(baseLayer);
+    background.appendChild(glowLayer);
     background.appendChild(gridLayer);
-    background.appendChild(blurLayer);
     
     return background.outerHTML;
 }
@@ -33,66 +40,75 @@ function createNavigation(currentPage = 'index') {
 
     const navItems = Object.entries(pages).map(([key, page]) => {
         const isActive = key === currentPage;
-        const activeClass = isActive ? 'bg-blue-500 text-white' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800';
+        // 新的导航激活样式
+        const activeClass = isActive 
+            ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400 font-semibold shadow-sm border border-primary-500/20' 
+            : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100/50 dark:hover:bg-slate-800/50';
         
         return `
-            <a href="${page.href}" class="px-4 py-2 rounded-lg ${activeClass} font-medium text-sm transition-all duration-300 flex items-center">
-                <span class="mr-2">${page.icon}</span>
+            <a href="${page.href}" class="px-4 py-2 rounded-xl ${activeClass} text-sm transition-all duration-300 flex items-center group">
+                <span class="mr-2 group-hover:scale-110 transition-transform duration-300">${page.icon}</span>
                 <span data-key="${page.nameKey}"></span>
             </a>`;
     }).join('');
 
     return `
-    <!-- 顶部导航栏 -->
-    <nav class="sticky top-0 z-50 border-b border-slate-200/50 dark:border-slate-700/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <!-- Logo和标题 -->
-                <div class="flex items-center space-x-4">
-                    <img src="css/ico.png" alt="Logo" class="w-8 h-8 rounded-lg">
-                    <h1 class="text-xl font-bold text-slate-900 dark:text-slate-100" data-key="title"></h1>
-                </div>
-                
-                <!-- 页面导航 -->
-                <div class="hidden md:flex items-center space-x-2">
-                    ${navItems}
-                </div>
-                
-                <!-- 右侧控制 -->
-                <div class="flex items-center space-x-4">
-                    <!-- 移动端菜单按钮 -->
-                    <button id="mobileMenuButton" class="md:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-300">
-                        <span>☰</span>
-                    </button>
-                    <!-- 主题切换 -->
-                    <button id="themeToggle" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-300">
-                        <span>🌙</span>
-                    </button>
+    <!-- 顶部导航栏 - 悬浮玻璃态设计 -->
+    <nav class="sticky top-4 z-50 mx-4 sm:mx-6 lg:mx-8 mb-8">
+        <div class="max-w-7xl mx-auto bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl border border-white/20 dark:border-slate-700/30 rounded-2xl shadow-lg shadow-slate-200/20 dark:shadow-slate-900/20">
+            <div class="px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <!-- Logo和标题 -->
+                    <div class="flex items-center space-x-3 group cursor-pointer" onclick="window.location.href='index.html'">
+                        <div class="relative">
+                            <div class="absolute inset-0 bg-primary-500 blur-lg opacity-20 group-hover:opacity-40 transition-opacity duration-300"></div>
+                            <img src="assets/img/ico.png" alt="Logo" class="relative w-9 h-9 rounded-xl shadow-sm group-hover:scale-105 transition-transform duration-300">
+                        </div>
+                        <h1 class="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300" data-key="title"></h1>
+                    </div>
                     
-                    <!-- 语言切换 -->
-                    <button id="languageToggle" class="px-2 md:px-3 py-1 md:py-2 rounded-md md:rounded-lg text-xs md:text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-300 border border-slate-200 dark:border-slate-700">
-                        <span class="language-zh">中文</span>
-                        <span class="language-en hidden">EN</span>
-                    </button>
+                    <!-- 页面导航 -->
+                    <div class="hidden md:flex items-center space-x-1">
+                        ${navItems}
+                    </div>
                     
+                    <!-- 右侧控制 -->
+                    <div class="flex items-center space-x-3">
+                        <!-- 主题切换 -->
+                        <button id="themeToggle" class="p-2.5 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-primary-500 dark:hover:text-primary-400 transition-all duration-300">
+                            <span>🌙</span>
+                        </button>
+                        
+                        <!-- 语言切换 -->
+                        <button id="languageToggle" class="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-primary-50 dark:hover:bg-primary-900/30 hover:text-primary-600 dark:hover:text-primary-400 transition-all duration-300 border border-slate-200 dark:border-slate-700">
+                            <span class="language-zh">中文</span>
+                            <span class="language-en hidden">EN</span>
+                        </button>
 
+                        <!-- 移动端菜单按钮 -->
+                        <button id="mobileMenuButton" class="md:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-300">
+                            <span>☰</span>
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <!-- 移动端菜单面板 -->
-        <div id="mobileMenu" class="md:hidden hidden bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-t border-slate-200/50 dark:border-slate-700/50">
-            <div class="px-4 py-4 space-y-2">
-                ${Object.entries(pages).map(([key, page]) => {
-                    const isActive = key === currentPage;
-                    const activeClass = isActive ? 'bg-blue-500 text-white' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800';
-                    
-                    return `
-                        <a href="${page.href}" class="block px-4 py-3 rounded-lg ${activeClass} font-medium text-sm transition-all duration-300 flex items-center">
-                            <span class="mr-3">${page.icon}</span>
-                            <span data-key="${page.nameKey}"></span>
-                        </a>`;
-                }).join('')}
+            
+            <!-- 移动端菜单面板 -->
+            <div id="mobileMenu" class="md:hidden hidden border-t border-slate-200/50 dark:border-slate-700/50">
+                <div class="px-4 py-4 space-y-2">
+                    ${Object.entries(pages).map(([key, page]) => {
+                        const isActive = key === currentPage;
+                        const activeClass = isActive 
+                            ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400 font-semibold' 
+                            : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800';
+                        
+                        return `
+                            <a href="${page.href}" class="block px-4 py-3 rounded-xl ${activeClass} text-sm transition-all duration-300 flex items-center">
+                                <span class="mr-3">${page.icon}</span>
+                                <span data-key="${page.nameKey}"></span>
+                            </a>`;
+                    }).join('')}
+                </div>
             </div>
         </div>
     </nav>`;
@@ -410,12 +426,19 @@ function toggleCardCollapse(headerElement) {
     
     const content = card.querySelector('.card-content');
     if (!content) return;
+
+    const icon = headerElement.querySelector('.collapse-icon');
     
     const isCollapsed = content.style.display === 'none' || content.classList.contains('hidden');
     
     if (isCollapsed) {
         content.style.display = '';
         content.classList.remove('hidden');
+        
+        // 旋转图标
+        if (icon) icon.style.transform = 'rotate(0deg)';
+        headerElement.classList.remove('opacity-60');
+
         // 添加展开动画
         content.style.maxHeight = '0';
         content.style.overflow = 'hidden';
@@ -431,6 +454,10 @@ function toggleCardCollapse(headerElement) {
             content.style.transition = '';
         }, 300);
     } else {
+        // 旋转图标
+        if (icon) icon.style.transform = 'rotate(-90deg)';
+        headerElement.classList.add('opacity-60');
+
         // 添加收起动画
         content.style.maxHeight = content.scrollHeight + 'px';
         content.style.overflow = 'hidden';

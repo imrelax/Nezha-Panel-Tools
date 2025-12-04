@@ -1,4 +1,5 @@
 // 主应用初始化模块
+// 负责全局初始化、状态恢复、全局事件处理
 
 // 初始化应用
 document.addEventListener('DOMContentLoaded', function() {
@@ -11,8 +12,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function initializeApp() {
     // 初始化主题 - 自动检测浏览器主题
-    initializeTheme();
+    if (typeof initializeTheme === 'function') {
+        initializeTheme();
+    }
     
+    // 恢复应用状态
+    restoreAppState();
+
     // 初始化统一翻译管理器
     if (typeof unifiedI18nManager !== 'undefined') {
         await unifiedI18nManager.init();
@@ -23,188 +29,47 @@ async function initializeApp() {
     // 检查当前页面并初始化相应的功能
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
     
-    if (currentPage === 'index.html') {
-        // 主页面初始化
-        initializeMainPage();
+    if (currentPage === 'index.html' || currentPage === '') {
+        // 主页面初始化 - 委托给 index.js
+        if (typeof initializeIndexPage === 'function') {
+            initializeIndexPage();
+        } else {
+            console.warn('initializeIndexPage not found');
+        }
     }
     // traffic.html 和 alert.html 的初始化由各自的脚本处理
 }
 
-// 初始化主页面
-function initializeMainPage() {
-    // 设置默认开始时间
-    const now = new Date();
-    const startDateElement = document.getElementById('startDate');
-    if (startDateElement) {
-        startDateElement.value = formatDateTimeLocal(now);
-    }
-    
-    // 初始化复选框状态
-    const enableBillingCheckbox = document.getElementById('enableBilling');
-    const enablePlanCheckbox = document.getElementById('enablePlan');
-    const billingForm = document.getElementById('billingForm');
-    const planForm = document.getElementById('planForm');
-    
-    if (enableBillingCheckbox) {
-        enableBillingCheckbox.checked = state.config.enableBilling;
-    }
-    if (enablePlanCheckbox) {
-        enablePlanCheckbox.checked = state.config.enablePlan;
-    }
-    if (billingForm && state.config.enableBilling) {
-        billingForm.classList.remove('hidden');
-    }
-    if (planForm && state.config.enablePlan) {
-        planForm.classList.remove('hidden');
-    }
-    
-    // 初始化配置
-    updateBilling();
-    
-    // 初始化标签
-    renderTags();
-    
-    // 更新计划和JSON（在标签渲染后）
-    updatePlan();
-    updateJsonCode();
-    
-    // 绑定事件监听器
-    bindEventListeners();
-}
-
-// 绑定事件监听器
-function bindEventListeners() {
-    // 表单变化监听
-    const formElements = document.querySelectorAll('input, select, textarea');
-    formElements.forEach(element => {
-        if (element.type === 'checkbox') {
-            element.addEventListener('change', handleFormChange);
-        } else {
-            element.addEventListener('input', debounce(handleFormChange, 300));
-        }
-    });
-    
-    // 标签输入监听
-    const newTagInput = document.getElementById('newTag');
-    if (newTagInput) {
-        newTagInput.addEventListener('keypress', handleTagInput);
-    }
-    
-    // JSON代码变化监听
-    const jsonCode = document.getElementById('jsonCode');
-    if (jsonCode) {
-        jsonCode.addEventListener('input', debounce(handleCodeChange, 500));
-    }
-    
-    // 键盘快捷键
-    document.addEventListener('keydown', handleKeyboardShortcuts);
-}
-
-// 处理表单变化
-function handleFormChange(event) {
-    const element = event.target;
-    const id = element.id;
-    
-    // 根据不同的表单元素执行相应的更新
-    switch (id) {
-        case 'enableBilling':
-            toggleSection('billing');
-            break;
-        case 'enablePlan':
-            toggleSection('plan');
-            break;
-        case 'startDate':
-        case 'endDate':
-        case 'autoRenewal':
-        case 'cycle':
-            updateBilling();
-            break;
-        case 'amountType':
-            updateAmountType();
-            break;
-        case 'amountValue':
-        case 'currency':
-        case 'currencyFormat':
-            updateBilling();
-            updateCurrencyFormatOptions();
-            break;
-        case 'bandwidthValue':
-        case 'bandwidthUnit':
-            updateBandwidthUnit();
-            break;
-        case 'trafficValue':
-        case 'trafficUnit':
-        case 'trafficPeriod':
-            updateTrafficUnit();
-            break;
-
-        case 'trafficType':
-            updatePlan();
-            break;
-        case 'ipv4':
-        case 'ipv6':
-        case 'networkRoute':
-        case 'extraTags':
-            updatePlan();
-            break;     default:
-            // 通用更新
-            if (element.closest('#billingForm')) {
-                updateBilling();
-            } else if (element.closest('#planForm')) {
-                updatePlan();
-            }
-    }
-}
-
-// 复制JSON代码函数
-function copyCode(event) {
-    event.stopPropagation();
-    const jsonCode = document.getElementById('jsonCode').value;
-    commonUtils.copyToClipboard(jsonCode);
-}
-
 // 显示提示消息
 function showToast(message, type = 'success') {
-    commonUtils.showToast(message, type);
+    if (typeof commonUtils !== 'undefined' && commonUtils.showToast) {
+        commonUtils.showToast(message, type);
+    } else if (typeof window.showToast === 'function') {
+        // 如果 commonUtils 未定义，尝试直接调用全局 showToast
+        window.showToast(message, type);
+    } else {
+        // 最后的后备方案：直接 alert
+        console.log(`[Toast ${type}] ${message}`);
+    }
 }
 
 // 处理键盘快捷键
 function handleKeyboardShortcuts(event) {
-    // Ctrl/Cmd + C 复制JSON - 只在没有选中文本或选中的是JSON代码区域时才拦截
-    if ((event.ctrlKey || event.metaKey) && event.key === 'c' && !event.target.matches('input, textarea')) {
-        const selection = window.getSelection();
-        const selectedText = selection.toString().trim();
-        
-        // 只有在没有选中任何文本，或者选中的文本来自JSON代码区域时才拦截
-        if (!selectedText || (selection.anchorNode && selection.anchorNode.parentElement && 
-            (selection.anchorNode.parentElement.id === 'jsonCode' || 
-             selection.anchorNode.parentElement.closest('#jsonCode')))) {
-            event.preventDefault();
-            copyCode(event);
-        }
-        // 如果用户选中了其他文本，让浏览器执行默认的复制行为
-    }
-    
-    // Ctrl/Cmd + R 刷新配置
-    if ((event.ctrlKey || event.metaKey) && event.key === 'r') {
-        event.preventDefault();
-        refreshFromCode(event);
-    }
-    
     // Ctrl/Cmd + T 切换主题
     if ((event.ctrlKey || event.metaKey) && event.key === 't') {
         event.preventDefault();
-        toggleTheme();
+        if (typeof toggleTheme === 'function') toggleTheme();
     }
     
     // Ctrl/Cmd + L 切换语言
     if ((event.ctrlKey || event.metaKey) && event.key === 'l') {
         event.preventDefault();
-        toggleLanguage();
+        if (typeof toggleLanguage === 'function') toggleLanguage();
     }
-    
-
 }
+
+// 键盘快捷键监听
+document.addEventListener('keydown', handleKeyboardShortcuts);
 
 // 增强的错误处理
 window.addEventListener('error', function(event) {
@@ -221,7 +86,7 @@ window.addEventListener('error', function(event) {
         errorMessage = 'JSON格式错误，请检查配置语法';
     }
     
-    showToast(errorMessage);
+    showToast(errorMessage, 'error');
 });
 
 // 未处理的Promise拒绝
@@ -239,7 +104,7 @@ window.addEventListener('unhandledrejection', function(event) {
         }
     }
     
-    showToast(errorMessage);
+    showToast(errorMessage, 'error');
     event.preventDefault();
 });
 
@@ -254,12 +119,14 @@ document.addEventListener('visibilitychange', function() {
 // 页面卸载前保存状态和清理资源
 window.addEventListener('beforeunload', function() {
     // 保存当前状态到本地存储
-    storage.set('appState', {
-        config: state.config,
-        tags: state.tags,
-        theme: state.theme,
-        language: state.language
-    });
+    if (typeof storage !== 'undefined' && typeof state !== 'undefined') {
+        storage.set('appState', {
+            config: state.config,
+            tags: state.tags,
+            theme: state.theme,
+            language: state.language
+        });
+    }
     
     // 清理事件监听器和定时器
     clearEventListeners();
@@ -268,12 +135,9 @@ window.addEventListener('beforeunload', function() {
 // 清理事件监听器函数
 function clearEventListeners() {
     // 清理防抖定时器
-    const formElements = document.querySelectorAll('input, select, textarea');
-    formElements.forEach(element => {
-        // 移除事件监听器（如果有引用的话）
-        element.removeEventListener('input', handleFormChange);
-        element.removeEventListener('change', handleFormChange);
-    });
+    if (typeof commonUtils !== 'undefined' && commonUtils.debounceTimers) {
+         commonUtils.debounceTimers.clear();
+    }
     
     // 清理其他可能的定时器
     if (window.debounceTimers) {
@@ -285,6 +149,8 @@ function clearEventListeners() {
 
 // 恢复保存的状态
 function restoreAppState() {
+    if (typeof storage === 'undefined') return;
+    
     const savedState = storage.get('appState');
     if (savedState) {
         // 恢复配置
@@ -298,32 +164,8 @@ function restoreAppState() {
         }
         
         // 恢复主题
-        if (savedState.theme) {
+        if (savedState.theme && typeof setTheme === 'function') {
             setTheme(savedState.theme);
-        }
-        
-        // 恢复语言
-        if (savedState.language && typeof i18nManager !== 'undefined' && i18nManager.setLanguage) {
-            i18nManager.setLanguage(savedState.language);
-        }
-        
-
-    }
-}
-
-// 应用版本检查
-function checkAppVersion() {
-    const currentVersion = '1.0.0';
-    const savedVersion = storage.get('appVersion');
-    
-    if (savedVersion !== currentVersion) {
-        // 版本更新，可以执行迁移逻辑
-        console.log(`应用版本从 ${savedVersion} 更新到 ${currentVersion}`);
-        storage.set('appVersion', currentVersion);
-        
-        // 显示更新提示
-        if (savedVersion) {
-            showToast('应用已更新到新版本！');
         }
     }
 }
@@ -346,29 +188,6 @@ function initPerformanceMonitoring() {
     }
 }
 
-// 更新金额类型显示逻辑
-function updateAmountType() {
-    const amountType = document.getElementById('amountType');
-    const amountInputs = document.getElementById('amountInputs');
-    
-    // 根据选择的类型显示或隐藏金额输入框
-    if (amountType && amountInputs) {
-        const selectedValue = amountType.value;
-        if (selectedValue === 'free') {
-            amountInputs.style.display = 'none';
-        } else {
-            amountInputs.style.display = 'flex';
-        }
-    }
-    
-    // 更新账单配置
-    if (typeof updateBilling === 'function') {
-        updateBilling();
-    }
-}
-
-
-
 // 初始化性能监控
 initPerformanceMonitoring();
 
@@ -376,14 +195,8 @@ initPerformanceMonitoring();
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         initializeApp,
-        initializeMainPage,
-        bindEventListeners,
-        handleFormChange,
-        copyCode,
         showToast,
         handleKeyboardShortcuts,
-        restoreAppState,
-        checkAppVersion,
-        updateAmountType
+        restoreAppState
     };
 }

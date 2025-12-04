@@ -13,13 +13,11 @@
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="哪吒面板工具 - 服务">
     <meta name="twitter:description" content="服务IP地址查询工具">
-    <link rel="icon" type="image/png" href="css/ico.png">
+    <link rel="icon" type="image/png" href="assets/img/ico.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 统一核心文件 (包含 Tailwind 配置和浏览器兼容性检查) -->
     <script src="js/core/unified-core.js"></script>
-    <!-- 统计代码 -->
-    <script defer src="https://na.xxxx.im/script.js" data-website-id="2f1ac940-605c-461c-8efd-f5ad2e13c7da"></script>
 </head>
 <body class="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 transition-all duration-300">
     
@@ -45,7 +43,7 @@
                     </span>
                 </div>
                 <a href="https://www.gowall.net/479.html" target="_blank" rel="noopener noreferrer" 
-                   class="inline-flex items-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-all duration-300 shadow-sm hover:shadow-md">
+                   class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white text-sm font-medium rounded-xl shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 hover:-translate-y-0.5 transition-all duration-300">
                     <span class="mr-2">📖</span>
                     <span data-key="viewTutorial" data-module="service">查看教程</span>
                     <span class="ml-2 text-xs opacity-75">↗</span>
@@ -54,7 +52,7 @@
         </div>
 
         <!-- IP地址表格 -->
-        <div id="ipTableContainer" class="bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-2xl border border-slate-200/50 dark:border-slate-700/50 overflow-hidden hover:shadow-xl transition-all duration-300">
+        <div id="ipTableContainer" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/30 shadow-lg shadow-slate-200/20 dark:shadow-slate-900/20 overflow-hidden hover:shadow-xl hover:shadow-primary-500/10 dark:hover:shadow-primary-500/5 transition-all duration-300">
             <div class="p-6">
                 <div class="overflow-x-auto">
                     <table class="w-full min-w-full" id="ipTable">
@@ -99,7 +97,6 @@
     <script src="js/components/shared-components.js"></script>
     <script src="js/core/core.js"></script>
     <script src="js/components/theme.js"></script>
-    <script src="js/utils.js"></script>
     <script src="js/pages/service.js"></script>
     
     <script>

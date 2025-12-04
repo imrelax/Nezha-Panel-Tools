@@ -65,37 +65,75 @@
         darkMode: 'class',
         theme: {
             extend: {
+                fontFamily: {
+                    sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                    mono: ['JetBrains Mono', 'Fira Code', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+                },
                 colors: {
                     primary: {
-                        50: '#f3f6fb',
-                        100: '#e3edfa',
-                        500: '#2563eb',
-                        600: '#1d4ed8',
-                        900: '#1e293b'
+                        50: '#f5f3ff',
+                        100: '#ede9fe',
+                        200: '#ddd6fe',
+                        300: '#c4b5fd',
+                        400: '#a78bfa',
+                        500: '#8b5cf6',
+                        600: '#7c3aed',
+                        700: '#6d28d9',
+                        800: '#5b21b6',
+                        900: '#4c1d95',
+                        950: '#2e1065',
+                    },
+                    secondary: {
+                        50: '#ecfeff',
+                        100: '#cffafe',
+                        200: '#a5f3fc',
+                        300: '#67e8f9',
+                        400: '#22d3ee',
+                        500: '#06b6d4',
+                        600: '#0891b2',
+                        700: '#0e7490',
+                        800: '#155e75',
+                        900: '#164e63',
+                    },
+                    slate: {
+                        850: '#1e293b', // Custom dark shade
+                        900: '#0f172a', // Main dark bg
+                        950: '#020617', // Deep dark
                     }
                 },
                 animation: {
-                    'fade-in': 'fadeIn 0.5s ease-in-out',
-                    'slide-up': 'slideUp 0.3s ease-out',
-                    'bounce-gentle': 'bounceGentle 2s infinite',
+                    'fade-in': 'fadeIn 0.6s ease-out',
+                    'slide-up': 'slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+                    'bounce-gentle': 'bounceGentle 3s infinite',
+                    'pulse-glow': 'pulseGlow 4s ease-in-out infinite',
                 },
                 keyframes: {
                     fadeIn: {
-                        '0%': { opacity: '0' },
-                        '100%': { opacity: '1' }
+                        '0%': { opacity: '0', transform: 'translateY(10px)' },
+                        '100%': { opacity: '1', transform: 'translateY(0)' }
                     },
                     slideUp: {
-                        '0%': { transform: 'translateY(10px)', opacity: '0' },
+                        '0%': { transform: 'translateY(20px)', opacity: '0' },
                         '100%': { transform: 'translateY(0)', opacity: '1' }
                     },
                     bounceGentle: {
                         '0%, 20%, 50%, 80%, 100%': { transform: 'translateY(0)' },
-                        '40%': { transform: 'translateY(-10px)' },
-                        '60%': { transform: 'translateY(-5px)' }
+                        '40%': { transform: 'translateY(-6px)' },
+                        '60%': { transform: 'translateY(-3px)' }
+                    },
+                    pulseGlow: {
+                        '0%, 100%': { opacity: '1', boxShadow: '0 0 20px -5px rgba(139, 92, 246, 0.5)' },
+                        '50%': { opacity: '0.8', boxShadow: '0 0 30px -5px rgba(139, 92, 246, 0.8)' }
                     }
                 },
                 backdropBlur: {
-                    xs: '2px'
+                    xs: '2px',
+                    md: '12px',
+                    xl: '24px'
+                },
+                boxShadow: {
+                    'glow': '0 0 20px -5px rgba(139, 92, 246, 0.3)',
+                    'glow-hover': '0 0 30px -5px rgba(139, 92, 246, 0.5)',
                 }
             }
         }
@@ -108,85 +146,3 @@
     
 })();
 
-// ===== 告警页面功能部分 (原 alert.js) =====
-
-// 页面初始化函数
-function initializeAlertPage() {
-    updateAlertRule();
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    // 根据页面类型进行智能初始化
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    
-    let initFunction = null;
-    
-    // 根据页面确定初始化函数
-    if (currentPage === 'alert.html' && document.getElementById('alertType')) {
-        initFunction = updateAlertRule;
-    }
-    // 其他页面可以在这里添加相应的初始化函数
-    
-    if (typeof initializePage === 'function') {
-        initializePage(initFunction, { initTheme: false }); // 主题已在其他地方初始化
-    } else if (initFunction) {
-        initFunction();
-    }
-});
-
-function updateAlertRule() {
-    const type = document.getElementById('alertType').value;
-    const min = document.getElementById('alertMin').value;
-    const max = document.getElementById('alertMax').value;
-    const duration = document.getElementById('alertDuration').value;
-    const cover = document.getElementById('alertCover').checked ? 1 : 0;
-    const ignoreInput = document.getElementById('alertIgnore').value;
-    const ignore = {};
-    ignoreInput.split(',').forEach(id => {
-        const t = id.trim();
-        if (t) ignore[t] = true;
-    });
-
-    const obj = { type };
-    if (min) obj.min = Number(min);
-    if (max) obj.max = Number(max);
-    obj.duration = Number(duration);
-    obj.cover = cover;
-    if (Object.keys(ignore).length) obj.ignore = ignore;
-
-    const json = JSON.stringify([obj], null, 2);
-    document.getElementById('alertJson').value = json;
-}
-
-// 刷新数据到初始状态
-function refreshAlertData(event) {
-    event.stopPropagation();
-    
-    function resetAlertForm() {
-        document.getElementById('alertType').value = 'offline';
-        document.getElementById('alertMin').value = '';
-        document.getElementById('alertMax').value = '';
-        document.getElementById('alertDuration').value = '30';
-        document.getElementById('alertCover').checked = false;
-        document.getElementById('alertIgnore').value = '';
-    }
-    
-    refreshData(resetAlertForm, updateAlertRule);
-}
-
-function copyAlertCode(event) {
-    event.stopPropagation();
-    const alertJson = document.getElementById('alertJson').value;
-    commonUtils.copyToClipboard(alertJson);
-}
-
-// 模块导出（如果在模块环境中）
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        tailwindConfig: window.tailwindConfig,
-        initializeAlertPage,
-        updateAlertRule,
-        refreshAlertData,
-        copyAlertCode
-    };
-}

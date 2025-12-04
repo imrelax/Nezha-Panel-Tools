@@ -13,13 +13,11 @@
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="哪吒面板工具 - 面板美化">
     <meta name="twitter:description" content="生成JSON配置文件优化哪吒面板样式">
-    <link rel="icon" type="image/png" href="css/ico.png">
+    <link rel="icon" type="image/png" href="assets/img/ico.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 统一核心文件 (包含 Tailwind 配置和浏览器兼容性检查) -->
     <script src="js/core/unified-core.js"></script>
-    <!-- 统计代码 -->
-    <script defer src="https://na.xxxx.im/script.js" data-website-id="2f1ac940-605c-461c-8efd-f5ad2e13c7da"></script>
     
 </head>
 <body class="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 transition-all duration-300">
@@ -36,7 +34,7 @@
         </div>
 
         <!-- 使用提示通栏 -->
-        <div class="mb-6 bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-2xl border border-slate-200/50 dark:border-slate-700/50 overflow-hidden hover:shadow-xl transition-all duration-300">
+        <div class="mb-6 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/30 shadow-lg shadow-slate-200/20 dark:shadow-slate-900/20 overflow-hidden hover:shadow-xl hover:shadow-primary-500/10 dark:hover:shadow-primary-500/5 transition-all duration-300">
             <div class="p-6 border-b border-slate-200/50 dark:border-slate-700/50">
                 <div class="flex items-center space-x-3">
                     <div class="w-8 h-8 flex items-center justify-center">
@@ -76,7 +74,7 @@
             <!-- 右侧代码导出区域 -->
             <div class="space-y-6">
                 <!-- 配置代码预览 -->
-                <div class="bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-2xl border border-slate-200/50 dark:border-slate-700/50 overflow-hidden hover:shadow-xl transition-all duration-300">
+                <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/30 shadow-lg shadow-slate-200/20 dark:shadow-slate-900/20 overflow-hidden hover:shadow-xl hover:shadow-primary-500/10 dark:hover:shadow-primary-500/5 transition-all duration-300">
                     <div class="p-6 border-b border-slate-200/50 dark:border-slate-700/50">
                         <div class="flex items-center justify-between">
                             <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 flex items-center">
@@ -86,18 +84,19 @@
                                 <span data-key="configCode" data-module="beautify">配置代码</span>
                             </h3>
                             <div class="flex items-center space-x-2">
-                                <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg text-sm transition-all duration-300 shadow-sm hover:shadow-md" onclick="showImportDialog()">
+                                <button class="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white px-4 py-2 rounded-xl text-sm transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:-translate-y-0.5" onclick="showImportDialog()">
                                     <span class="mr-2">📥</span>
                                     <span data-key="importConfig" data-module="beautify">导入配置</span>
                                 </button>
-                                <button class="bg-orange-500 hover:bg-orange-600 text-white px-3 py-2 rounded-lg text-sm transition-all duration-300 shadow-sm hover:shadow-md" onclick="resetConfig()">
+                                <button class="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white px-4 py-2 rounded-xl text-sm transition-all duration-300 shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 hover:-translate-y-0.5" onclick="resetConfig()">
                                     <span class="mr-2">🔄</span>
                                     <span data-key="resetConfig" data-module="beautify">重置配置</span>
                                 </button>
-                                <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-lg text-sm transition-all duration-300 shadow-sm hover:shadow-md" onclick="copyBeautifyCode(event)">
+                                <button class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white px-4 py-2 rounded-xl text-sm transition-all duration-300 shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 hover:-translate-y-0.5" onclick="copyBeautifyCode(event)">
                                     <span class="mr-2">📋</span>
                                     <span data-key="copy" data-module="common"></span>
                                 </button>
+
                             </div>
                         </div>
                     </div>
@@ -153,10 +152,44 @@
     <script src="js/components/shared-components.js"></script>
     <script src="js/components/theme.js"></script>
     <script src="js/core/core.js"></script>
+    <script src="js/pages/beautify-config.js"></script>
     <script src="js/pages/beautify.js"></script>
-    <script src="js/utils.js"></script>
 
 <script>
+    // 创建函数代理 helper
+    function createFunctionProxy(funcName) {
+        return function(...args) {
+            if (typeof window[funcName] === 'function') {
+                return window[funcName].apply(this, args);
+            }
+            console.warn(`Function ${funcName} not found`);
+        };
+    }
+
+    // 设置模态框事件监听器 helper
+    function setupModalEventListener(modalId, closeCallback) {
+        const modal = document.getElementById(modalId);
+        if (!modal) return;
+
+        // 点击背景关闭
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                if (typeof closeCallback === 'function') {
+                    closeCallback();
+                }
+            }
+        });
+
+        // ESC键关闭
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                if (typeof closeCallback === 'function') {
+                    closeCallback();
+                }
+            }
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', async function() {
         try {
             // 初始化统一翻译管理器
@@ -231,11 +264,11 @@
 
     <script>
         // 创建函数代理
-        const hideImportDialog = createFunctionProxy('handleHideImportDialog');
-        const importConfig = createFunctionProxy('handleImportConfig');
+        window.hideImportDialog = createFunctionProxy('handleHideImportDialog');
+        window.importConfig = createFunctionProxy('handleImportConfig');
 
         // 设置模态框事件监听器
-        setupModalEventListener('importModal', hideImportDialog);
+        setupModalEventListener('importModal', window.hideImportDialog);
     </script>
 </body>
 </html>
