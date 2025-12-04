@@ -17,7 +17,9 @@ async function loadIPDataWithLoader() {
         const currentModified = response.headers.get('last-modified');
         if (currentModified && lastModified && currentModified !== lastModified) {
             console.log('IP数据文件已更新，正在刷新...');
-            showUpdateNotification();
+            if (typeof showToast === 'function') {
+                showToast('数据已更新', 'success');
+            }
         }
         lastModified = currentModified;
         
@@ -143,28 +145,6 @@ function stopAutoRefresh() {
     }
 }
 
-// 显示更新通知
-function showUpdateNotification() {
-    // 创建更新通知
-    const notification = document.createElement('div');
-    notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 flex items-center animate-slide-up';
-    notification.innerHTML = `
-        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-        </svg>
-        数据已更新
-    `;
-    
-    document.body.appendChild(notification);
-    
-    // 3秒后自动移除通知
-    setTimeout(() => {
-        if (notification.parentNode) {
-            notification.remove();
-        }
-    }, 3000);
-}
-
 // 获取用户友好的错误信息
 function getErrorMessage(error) {
     if (error.message.includes('Failed to fetch')) {
@@ -272,7 +252,6 @@ if (typeof module !== 'undefined' && module.exports) {
         copyToClipboard,
         showCopyToast,
         startAutoRefresh,
-        stopAutoRefresh,
-        showUpdateNotification
+        stopAutoRefresh
     };
 }

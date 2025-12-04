@@ -1,177 +1,177 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>哪吒面板工具 - 告警规则配置</title>
-    <meta name="description" content="哪吒面板工具，支持告警规则配置，快速生成哪吒监控面板的JSON配置文件">
-    <meta name="keywords" content="哪吒面板,JSON生成器,告警规则,服务器监控,配置工具">
-    <meta name="author" content="哪吒面板工具">
-    <meta property="og:title" content="哪吒面板工具">
-    <meta property="og:description" content="快速生成哪吒监控面板的JSON配置文件，支持告警规则配置">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="哪吒面板工具">
-    <meta name="twitter:description" content="快速生成哪吒监控面板的JSON配置文件，支持告警规则配置">
-    <link rel="icon" type="image/png" href="assets/img/ico.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>哪吒面板工具 - 告警规则配置</title>
+  <meta name="description" content="哪吒面板工具，支持告警规则配置，快速生成哪吒监控面板的JSON配置文件">
+  <meta name="keywords" content="哪吒面板,JSON生成器,告警规则,服务器监控,配置工具">
+  <meta name="author" content="哪吒面板工具">
+  <meta property="og:title" content="哪吒面板工具">
+  <meta property="og:description" content="快速生成哪吒监控面板的JSON配置文件，支持告警规则配置">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="哪吒面板工具">
+  <meta name="twitter:description" content="快速生成哪吒监控面板的JSON配置文件，支持告警规则配置">
+  <link rel="icon" type="image/png" href="assets/img/ico.png">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 统一核心文件 (包含 Tailwind 配置、浏览器兼容性检查和告警页面功能) -->
-    <script src="js/core/unified-core.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 统一核心文件 (包含 Tailwind 配置、浏览器兼容性检查和告警页面功能) -->
+  <script src="js/core/unified-core.js"></script>
 
 </head>
 <body class="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 transition-all duration-300">
-    <!-- 背景、导航栏和页面标签导航将通过共享组件动态插入 -->
+  <!-- 背景、导航栏和页面标签导航将通过共享组件动态插入 -->
 
-    <!-- 主要内容 -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- 主要内容 -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-        <div class="main-content" id="settings-view">
-            <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
-                <div class="space-y-6">
-                    <!-- 警报规则配置 -->
-                    <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/20 dark:border-slate-700/30 overflow-hidden hover:shadow-xl hover:shadow-primary-500/10 dark:hover:shadow-primary-500/5 transition-all duration-300">
-                        <div class="p-6 border-b border-slate-200/50 dark:border-slate-700/50 cursor-pointer hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors duration-300" onclick="toggleCardCollapse(this)">
-                            <div class="flex items-center justify-between">
-                                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 flex items-center">
-                                    <div class="w-8 h-8 flex items-center justify-center mr-3">
-                                        <span class="text-white text-sm">🔔</span>
-                                    </div>
-                                    <span data-key="alertRules" data-module="alert"></span>
-                                </h3>
+    <div class="main-content" id="settings-view">
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+        <div class="space-y-6">
+          <!-- 警报规则配置 -->
+          <div class="glass-card glass-card-hover overflow-hidden">
+            <div class="glass-header cursor-pointer hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors duration-300" onclick="toggleCardCollapse(this)">
+              <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 flex items-center">
+                  <div class="w-8 h-8 flex items-center justify-center mr-3">
+                    <span class="text-white text-sm">🔔</span>
+                  </div>
+                  <span data-key="alertRules" data-module="alert"></span>
+                </h3>
 
-                            </div>
-                        </div>
-                        <div class="card-content p-6 space-y-6">
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300" data-key="type" data-module="alert"></label>
-                            <select id="alertType" onchange="updateAlertRule()" class="w-full px-4 py-3 border border-slate-200/60 dark:border-slate-700/60 rounded-xl focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm text-slate-900 dark:text-slate-100 transition-all duration-300 hover:bg-white/80 dark:hover:bg-slate-900/80">
-                                <option value="cpu" data-zh="CPU使用率" data-en="CPU Usage">CPU使用率</option>
-                                <option value="gpu" data-zh="GPU使用率" data-en="GPU Usage">GPU使用率</option>
-                                <option value="memory" data-zh="内存使用率" data-en="Memory Usage">内存使用率</option>
-                                <option value="swap" data-zh="交换空间" data-en="Swap Usage">交换空间</option>
-                                <option value="disk" data-zh="磁盘使用率" data-en="Disk Usage">磁盘使用率</option>
-                                <option value="net_in_speed" data-zh="入站网速" data-en="Inbound Speed">入站网速</option>
-                                <option value="net_out_speed" data-zh="出站网速" data-en="Outbound Speed">出站网速</option>
-                                <option value="net_all_speed" data-zh="总网速" data-en="Total Speed">总网速</option>
-                                <option value="transfer_in" data-zh="入站流量" data-en="Inbound Traffic">入站流量</option>
-                                <option value="transfer_out" data-zh="出站流量" data-en="Outbound Traffic">出站流量</option>
-                                <option value="transfer_all" data-zh="总流量" data-en="Total Traffic">总流量</option>
-                                <option value="offline" data-zh="离线状态" data-en="Offline">离线状态</option>
-                                <option value="load1" data-zh="1分钟负载" data-en="1min Load">1分钟负载</option>
-                                <option value="load5" data-zh="5分钟负载" data-en="5min Load">5分钟负载</option>
-                                <option value="load15" data-zh="15分钟负载" data-en="15min Load">15分钟负载</option>
-                                <option value="process_count" data-zh="进程数量" data-en="Process Count">进程数量</option>
-                                <option value="tcp_conn_count" data-zh="TCP连接数" data-en="TCP Connections">TCP连接数</option>
-                                <option value="udp_conn_count" data-zh="UDP连接数" data-en="UDP Connections">UDP连接数</option>
-                                <option value="temperature_max" data-zh="最高温度" data-en="Max Temperature">最高温度</option>
-                            </select>
-                        </div>
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300" data-key="minValue" data-module="alert"></label>
-                            <input type="number" id="alertMin" onchange="updateAlertRule()" class="w-full px-4 py-3 border border-slate-200/60 dark:border-slate-700/60 rounded-xl focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm text-slate-900 dark:text-slate-100 transition-all duration-300 hover:bg-white/80 dark:hover:bg-slate-900/80">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300" data-key="maxValue" data-module="alert"></label>
-                            <input type="number" id="alertMax" onchange="updateAlertRule()" class="w-full px-4 py-3 border border-slate-200/60 dark:border-slate-700/60 rounded-xl focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm text-slate-900 dark:text-slate-100 transition-all duration-300 hover:bg-white/80 dark:hover:bg-slate-900/80">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300" data-key="duration" data-module="alert"></label>
-                            <input type="number" id="alertDuration" value="10" onchange="updateAlertRule()" class="w-full px-4 py-3 border border-slate-200/60 dark:border-slate-700/60 rounded-xl focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm text-slate-900 dark:text-slate-100 transition-all duration-300 hover:bg-white/80 dark:hover:bg-slate-900/80">
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300" data-key="cover" data-module="alert"></label>
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" id="alertCover" onchange="updateAlertRule()" class="sr-only peer">
-                                <div class="w-11 h-6 bg-slate-200/80 dark:bg-slate-700/80 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-500/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all after:shadow-sm dark:border-slate-600 peer-checked:bg-gradient-to-r peer-checked:from-primary-500 peer-checked:to-secondary-500"></div>
-                            </label>
-                        </div>
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300" data-key="ignoreServers" data-module="alert"></label>
-                            <input type="text" id="alertIgnore" placeholder="3,4" onchange="updateAlertRule()" class="w-full px-4 py-3 border border-slate-200/60 dark:border-slate-700/60 rounded-xl focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 transition-all duration-300 hover:bg-white/80 dark:hover:bg-slate-900/80">
-                        </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 右侧面板 -->
-                <div class="space-y-6">
-                    <!-- JSON 配置 -->
-                    <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/20 dark:border-slate-700/30 overflow-hidden hover:shadow-xl hover:shadow-primary-500/10 dark:hover:shadow-primary-500/5 transition-all duration-300">
-                        <div class="p-6 border-b border-slate-200/50 dark:border-slate-700/50 cursor-pointer hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors duration-300" onclick="toggleCardCollapse(this)">
-                            <div class="flex items-center justify-between">
-                                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 flex items-center">
-                                    <div class="w-8 h-8 flex items-center justify-center mr-3">
-                                        <span class="text-white text-sm">💻</span>
-                                    </div>
-                                    <span data-key="jsonConfig" data-module="alert"></span>
-                                </h3>
-                                <div class="flex items-center space-x-2">
-                                    <button class="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white px-4 py-2 rounded-xl text-sm transition-all duration-300 shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 hover:-translate-y-0.5" onclick="refreshAlertData(event)">
-                                        <span class="mr-2">🔄</span>
-                                        <span data-key="refresh" data-module="common"></span>
-                                    </button>
-                                    <button class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white px-4 py-2 rounded-xl text-sm transition-all duration-300 shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 hover:-translate-y-0.5" onclick="copyAlertCode(event)">
-                                        <span class="mr-2">📋</span>
-                                        <span data-key="copy" data-module="common"></span>
-                                    </button>
-        
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-content p-6">
-                            <textarea id="alertJson" spellcheck="false" class="w-full h-96 p-6 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-mono text-sm border-0 focus:ring-0 resize-none leading-relaxed" readonly></textarea>
-                        </div>
-                    </div>
-                </div>
+              </div>
             </div>
+            <div class="glass-content card-content space-y-6">
+            <div class="space-y-2">
+              <label class="label-text" data-key="type" data-module="alert"></label>
+              <select id="alertType" onchange="updateAlertRule()" class="glass-input">
+                <option value="cpu" data-zh="CPU使用率" data-en="CPU Usage">CPU使用率</option>
+                <option value="gpu" data-zh="GPU使用率" data-en="GPU Usage">GPU使用率</option>
+                <option value="memory" data-zh="内存使用率" data-en="Memory Usage">内存使用率</option>
+                <option value="swap" data-zh="交换空间" data-en="Swap Usage">交换空间</option>
+                <option value="disk" data-zh="磁盘使用率" data-en="Disk Usage">磁盘使用率</option>
+                <option value="net_in_speed" data-zh="入站网速" data-en="Inbound Speed">入站网速</option>
+                <option value="net_out_speed" data-zh="出站网速" data-en="Outbound Speed">出站网速</option>
+                <option value="net_all_speed" data-zh="总网速" data-en="Total Speed">总网速</option>
+                <option value="transfer_in" data-zh="入站流量" data-en="Inbound Traffic">入站流量</option>
+                <option value="transfer_out" data-zh="出站流量" data-en="Outbound Traffic">出站流量</option>
+                <option value="transfer_all" data-zh="总流量" data-en="Total Traffic">总流量</option>
+                <option value="offline" data-zh="离线状态" data-en="Offline">离线状态</option>
+                <option value="load1" data-zh="1分钟负载" data-en="1min Load">1分钟负载</option>
+                <option value="load5" data-zh="5分钟负载" data-en="5min Load">5分钟负载</option>
+                <option value="load15" data-zh="15分钟负载" data-en="15min Load">15分钟负载</option>
+                <option value="process_count" data-zh="进程数量" data-en="Process Count">进程数量</option>
+                <option value="tcp_conn_count" data-zh="TCP连接数" data-en="TCP Connections">TCP连接数</option>
+                <option value="udp_conn_count" data-zh="UDP连接数" data-en="UDP Connections">UDP连接数</option>
+                <option value="temperature_max" data-zh="最高温度" data-en="Max Temperature">最高温度</option>
+              </select>
+            </div>
+            <div class="space-y-2">
+              <label class="label-text" data-key="minValue" data-module="alert"></label>
+              <input type="number" id="alertMin" onchange="updateAlertRule()" class="glass-input">
+            </div>
+            <div class="space-y-2">
+              <label class="label-text" data-key="maxValue" data-module="alert"></label>
+              <input type="number" id="alertMax" onchange="updateAlertRule()" class="glass-input">
+            </div>
+            <div class="space-y-2">
+              <label class="label-text" data-key="duration" data-module="alert"></label>
+              <input type="number" id="alertDuration" value="10" onchange="updateAlertRule()" class="glass-input">
+            </div>
+            <div class="flex items-center justify-between">
+              <label class="text-sm font-semibold text-slate-700 dark:text-slate-300" data-key="cover" data-module="alert"></label>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="alertCover" onchange="updateAlertRule()" class="sr-only peer">
+                <div class="w-11 h-6 bg-slate-200/80 dark:bg-slate-700/80 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-500/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all after:shadow-sm dark:border-slate-600 peer-checked:bg-gradient-to-r peer-checked:from-primary-500 peer-checked:to-secondary-500"></div>
+              </label>
+            </div>
+            <div class="space-y-2">
+              <label class="label-text" data-key="ignoreServers" data-module="alert"></label>
+              <input type="text" id="alertIgnore" placeholder="3,4" onchange="updateAlertRule()" class="glass-input">
+            </div>
+            </div>
+          </div>
         </div>
-
-
+        
+        <!-- 右侧面板 -->
+        <div class="space-y-6">
+          <!-- JSON 配置 -->
+          <div class="glass-card glass-card-hover overflow-hidden">
+            <div class="glass-header cursor-pointer hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors duration-300" onclick="toggleCardCollapse(this)">
+              <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 flex items-center">
+                  <div class="w-8 h-8 flex items-center justify-center mr-3">
+                    <span class="text-white text-sm">💻</span>
+                  </div>
+                  <span data-key="jsonConfig" data-module="alert"></span>
+                </h3>
+                <div class="flex items-center space-x-2">
+                  <button class="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white glass-button shadow-orange-500/30 hover:shadow-orange-500/50 hover:-translate-y-0.5" onclick="refreshAlertData(event)">
+                    <span class="mr-2">🔄</span>
+                    <span data-key="refresh" data-module="common"></span>
+                  </button>
+                  <button class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white glass-button shadow-emerald-500/30 hover:shadow-emerald-500/50 hover:-translate-y-0.5" onclick="copyAlertCode(event)">
+                    <span class="mr-2">📋</span>
+                    <span data-key="copy" data-module="common"></span>
+                  </button>
+    
+                </div>
+              </div>
+            </div>
+            <div class="glass-content card-content">
+              <textarea id="alertJson" spellcheck="false" class="w-full h-96 p-6 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-mono text-sm border-0 focus:ring-0 resize-none leading-relaxed" readonly></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- 模态框和页脚将通过共享组件动态插入 -->
 
-    </div>
+  </div>
+
+  <!-- 模态框和页脚将通过共享组件动态插入 -->
+
+  </div>
 
 
-    
-    <!-- 引入多语言管理器 -->
-    <script src="js/i18n/cn.js"></script>
-    <script src="js/i18n/en.js"></script>
-    <script src="js/utils/common-utils.js"></script>
-    <script src="js/i18n/i18n-unified.js"></script>
-    
-    <!-- 引入共享组件和主题脚本 -->
-    <script src="js/components/shared-components.js"></script>
-    
-    <!-- 引入核心脚本 -->
-    <script src="js/core/core.js"></script>
-    <script src="js/components/theme.js"></script>
-    
-    <script src="js/pages/alert.js"></script>
+  
+  <!-- 引入多语言管理器 -->
+  <script src="js/i18n/cn.js"></script>
+  <script src="js/i18n/en.js"></script>
+  <script src="js/utils/common-utils.js"></script>
+  <script src="js/i18n/i18n-unified.js"></script>
+  
+  <!-- 引入共享组件和主题脚本 -->
+  <script src="js/components/shared-components.js"></script>
+  
+  <!-- 引入核心脚本 -->
+  <script src="js/core/core.js"></script>
+  <script src="js/components/theme.js"></script>
+  
+  <script src="js/pages/alert.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', async function() {
-        try {
-            // 初始化统一翻译管理器
-            if (typeof unifiedI18nManager !== 'undefined') {
-                await unifiedI18nManager.init();
-            }
-            
-            // 初始化共享组件
-            if (typeof initializeSharedComponents === 'function') {
-                initializeSharedComponents('alert');
-            }
-            
-            // 初始化页面功能
-            if (typeof initializeAlertPage === 'function') {
-                initializeAlertPage();
-            }
-        } catch (error) {
-            console.error('页面初始化失败:', error);
-        }
-    });
+  document.addEventListener('DOMContentLoaded', async function() {
+    try {
+      // 初始化统一翻译管理器
+      if (typeof unifiedI18nManager !== 'undefined') {
+        await unifiedI18nManager.init();
+      }
+      
+      // 初始化共享组件
+      if (typeof initializeSharedComponents === 'function') {
+        initializeSharedComponents('alert');
+      }
+      
+      // 初始化页面功能
+      if (typeof initializeAlertPage === 'function') {
+        initializeAlertPage();
+      }
+    } catch (error) {
+      console.error('页面初始化失败:', error);
+    }
+  });
 </script>
-    
+  
 </body>
 </html>

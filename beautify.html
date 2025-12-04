@@ -34,8 +34,8 @@
         </div>
 
         <!-- 使用提示通栏 -->
-        <div class="mb-6 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/30 shadow-lg shadow-slate-200/20 dark:shadow-slate-900/20 overflow-hidden hover:shadow-xl hover:shadow-primary-500/10 dark:hover:shadow-primary-500/5 transition-all duration-300">
-            <div class="p-6 border-b border-slate-200/50 dark:border-slate-700/50">
+        <div class="mb-6 glass-card glass-card-hover overflow-hidden">
+            <div class="glass-header">
                 <div class="flex items-center space-x-3">
                     <div class="w-8 h-8 flex items-center justify-center">
                         <span class="text-purple-500 text-lg">✨</span>
@@ -74,8 +74,8 @@
             <!-- 右侧代码导出区域 -->
             <div class="space-y-6">
                 <!-- 配置代码预览 -->
-                <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/30 shadow-lg shadow-slate-200/20 dark:shadow-slate-900/20 overflow-hidden hover:shadow-xl hover:shadow-primary-500/10 dark:hover:shadow-primary-500/5 transition-all duration-300">
-                    <div class="p-6 border-b border-slate-200/50 dark:border-slate-700/50">
+                <div class="glass-card glass-card-hover overflow-hidden">
+                    <div class="glass-header">
                         <div class="flex items-center justify-between">
                             <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 flex items-center">
                                 <div class="w-8 h-8 flex items-center justify-center mr-3">
@@ -84,15 +84,15 @@
                                 <span data-key="configCode" data-module="beautify">配置代码</span>
                             </h3>
                             <div class="flex items-center space-x-2">
-                                <button class="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white px-4 py-2 rounded-xl text-sm transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:-translate-y-0.5" onclick="showImportDialog()">
+                                <button class="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white glass-button" onclick="showImportDialog()">
                                     <span class="mr-2">📥</span>
                                     <span data-key="importConfig" data-module="beautify">导入配置</span>
                                 </button>
-                                <button class="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white px-4 py-2 rounded-xl text-sm transition-all duration-300 shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 hover:-translate-y-0.5" onclick="resetConfig()">
+                                <button class="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white glass-button" onclick="resetConfig()">
                                     <span class="mr-2">🔄</span>
                                     <span data-key="resetConfig" data-module="beautify">重置配置</span>
                                 </button>
-                                <button class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white px-4 py-2 rounded-xl text-sm transition-all duration-300 shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 hover:-translate-y-0.5" onclick="copyBeautifyCode(event)">
+                                <button class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white glass-button" onclick="copyBeautifyCode(event)">
                                     <span class="mr-2">📋</span>
                                     <span data-key="copy" data-module="common"></span>
                                 </button>
@@ -100,7 +100,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card-content p-6">
+                    <div class="glass-content card-content">
                         <div class="bg-slate-900 dark:bg-slate-950 rounded-lg overflow-hidden">
                             <textarea id="beautifyJsonOutput" readonly class="w-full p-6 bg-slate-900 dark:bg-slate-950 text-green-400 font-mono text-sm border-0 focus:ring-0 resize-none leading-relaxed" rows="25" placeholder="// 生成的配置代码将在这里显示"></textarea>
                         </div>
@@ -108,8 +108,8 @@
                 </div>
 
                 <!-- 使用说明 -->
-                <div class="usage-tips bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-2xl border border-slate-200/50 dark:border-slate-700/50 overflow-hidden hover:shadow-xl transition-all duration-300">
-                    <div class="p-6 border-b border-slate-200/50 dark:border-slate-700/50">
+                <div class="usage-tips glass-card overflow-hidden transition-all duration-300 hover:shadow-xl">
+                    <div class="glass-header">
                         <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 flex items-center">
                             <div class="w-8 h-8 flex items-center justify-center mr-3">
                                 <span class="text-white text-sm">💡</span>
@@ -242,12 +242,12 @@
 
     <!-- 导入配置弹窗 -->
     <div id="importModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/50 dark:border-slate-700/50 w-full max-w-2xl max-h-[80vh] overflow-hidden">
-            <div class="p-6 border-b border-slate-200/50 dark:border-slate-700/50">
+        <div class="glass-card w-full max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
+            <div class="glass-header">
                 <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100" data-key="importConfigTitle" data-module="beautify">导入配置</h3>
             </div>
-            <div class="p-6">
-                <textarea id="importText" class="w-full h-64 p-4 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 font-mono text-sm" placeholder="请粘贴配置代码..."></textarea>
+            <div class="p-6 flex-1 overflow-hidden">
+                <textarea id="importText" class="glass-input w-full h-full min-h-[200px] font-mono text-sm resize-none" placeholder="请粘贴配置代码..."></textarea>
             </div>
             <div class="p-6 border-t border-slate-200/50 dark:border-slate-700/50 flex justify-end gap-3">
                 <button class="bg-slate-500 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm transition-all duration-300" onclick="hideImportDialog()">

@@ -1,5 +1,49 @@
 // 共享HTML组件
 
+// 注入全局样式
+function injectGlobalStyles() {
+    if (document.getElementById('global-styles')) return;
+    
+    const style = document.createElement('style');
+    style.id = 'global-styles';
+    style.type = 'text/tailwindcss';
+    style.innerHTML = `
+        @layer components {
+            .glass-card {
+                @apply bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/30 shadow-lg shadow-slate-200/20 dark:shadow-slate-900/20 transition-all duration-300;
+            }
+            .glass-card-hover {
+                @apply hover:shadow-xl hover:shadow-primary-500/10 dark:hover:shadow-primary-500/5;
+            }
+            .glass-header {
+                @apply p-6 border-b border-slate-200/50 dark:border-slate-700/50;
+            }
+            .glass-content {
+                @apply p-6;
+            }
+            .glass-input {
+                @apply w-full px-4 py-3 border border-slate-200/60 dark:border-slate-700/60 rounded-xl focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm text-slate-900 dark:text-slate-100 transition-all duration-300 hover:bg-white/80 dark:hover:bg-slate-900/80 outline-none;
+            }
+            .glass-button {
+                @apply px-4 py-2 rounded-xl text-sm transition-all duration-300 shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:shadow-md font-medium flex items-center justify-center;
+            }
+            .btn-primary {
+                @apply bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white shadow-primary-500/30 hover:shadow-primary-500/50;
+            }
+            .btn-secondary {
+                @apply bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-600 shadow-slate-200/30 dark:shadow-slate-900/30;
+            }
+            .section-title {
+                @apply text-lg font-semibold text-slate-900 dark:text-slate-100 flex items-center;
+            }
+            .label-text {
+                @apply block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+}
+
 // 科技风背景组件
 function createTechBackground() {
     const background = document.createElement('div');
@@ -41,32 +85,32 @@ function createNavigation(currentPage = 'index') {
 
     const navItems = Object.entries(pages).map(([key, page]) => {
         const isActive = key === currentPage;
-        // 新的导航激活样式
         const activeClass = isActive 
-            ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400 font-semibold shadow-sm border border-primary-500/20' 
+            ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400 font-semibold shadow-sm border border-primary-500/20 ring-1 ring-primary-500/10' 
             : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100/50 dark:hover:bg-slate-800/50';
         
         return `
-            <a href="${page.href}" class="px-4 py-2 rounded-xl ${activeClass} text-sm transition-all duration-300 flex items-center group">
-                <span class="mr-2 group-hover:scale-110 transition-transform duration-300">${page.icon}</span>
-                <span data-key="${page.nameKey}"></span>
+            <a href="${page.href}" class="px-4 py-2 rounded-xl ${activeClass} text-sm transition-all duration-300 flex items-center group relative overflow-hidden">
+                <span class="mr-2 group-hover:scale-110 transition-transform duration-300 relative z-10">${page.icon}</span>
+                <span data-key="${page.nameKey}" class="relative z-10"></span>
+                ${isActive ? '' : '<div class="absolute inset-0 bg-slate-200/50 dark:bg-slate-700/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>'}
             </a>`;
     }).join('');
 
     return `
     <!-- 顶部导航栏 - 悬浮玻璃态设计 -->
     <nav class="sticky top-4 z-50 mx-4 sm:mx-6 lg:mx-8 mb-8">
-        <div class="max-w-7xl mx-auto bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl border border-white/20 dark:border-slate-700/30 rounded-2xl shadow-lg shadow-slate-200/20 dark:shadow-slate-900/20">
+        <div class="max-w-7xl mx-auto bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl border border-white/20 dark:border-slate-700/30 rounded-2xl shadow-lg shadow-slate-200/20 dark:shadow-slate-900/20 transition-all duration-300 hover:shadow-xl hover:shadow-slate-200/30 dark:hover:shadow-slate-900/30">
             <div class="px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16">
                     <!-- Logo和标题 -->
-                    <div class="flex items-center space-x-3 group cursor-pointer" onclick="window.location.href='index.html'">
-                        <div class="relative">
-                            <div class="absolute inset-0 bg-primary-500 blur-lg opacity-20 group-hover:opacity-40 transition-opacity duration-300"></div>
-                            <img src="assets/img/ico.png" alt="Logo" class="relative w-9 h-9 rounded-xl shadow-sm group-hover:scale-105 transition-transform duration-300">
+                    <a href="index.html" class="flex items-center space-x-3 group">
+                        <div class="relative w-9 h-9">
+                            <div class="absolute inset-0 bg-primary-500 blur-lg opacity-20 group-hover:opacity-40 transition-opacity duration-300 rounded-xl"></div>
+                            <img src="assets/img/ico.png" alt="Logo" class="relative w-full h-full rounded-xl shadow-sm group-hover:scale-105 transition-transform duration-300">
                         </div>
-                        <h1 class="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300" data-key="title"></h1>
-                    </div>
+                        <h1 class="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 group-hover:to-primary-500 transition-all duration-300" data-key="title"></h1>
+                    </a>
                     
                     <!-- 页面导航 -->
                     <div class="hidden md:flex items-center space-x-1">
@@ -76,12 +120,12 @@ function createNavigation(currentPage = 'index') {
                     <!-- 右侧控制 -->
                     <div class="flex items-center space-x-3">
                         <!-- 主题切换 -->
-                        <button id="themeToggle" class="p-2.5 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-primary-500 dark:hover:text-primary-400 transition-all duration-300">
+                        <button id="themeToggle" class="p-2.5 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100/80 dark:hover:bg-slate-800/80 hover:text-primary-500 dark:hover:text-primary-400 transition-all duration-300 border border-transparent hover:border-slate-200 dark:hover:border-slate-700">
                             <span>🌙</span>
                         </button>
                         
                         <!-- 语言切换 -->
-                        <button id="languageToggle" class="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-primary-50 dark:hover:bg-primary-900/30 hover:text-primary-600 dark:hover:text-primary-400 transition-all duration-300 border border-slate-200 dark:border-slate-700">
+                        <button id="languageToggle" class="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 bg-slate-100/50 dark:bg-slate-800/50 hover:bg-primary-50 dark:hover:bg-primary-900/30 hover:text-primary-600 dark:hover:text-primary-400 transition-all duration-300 border border-slate-200 dark:border-slate-700 shadow-sm">
                             <span class="language-zh">中文</span>
                             <span class="language-en hidden">EN</span>
                         </button>
@@ -95,13 +139,13 @@ function createNavigation(currentPage = 'index') {
             </div>
             
             <!-- 移动端菜单面板 -->
-            <div id="mobileMenu" class="md:hidden hidden border-t border-slate-200/50 dark:border-slate-700/50">
+            <div id="mobileMenu" class="md:hidden hidden border-t border-slate-200/50 dark:border-slate-700/50 bg-white/50 dark:bg-slate-800/50 backdrop-blur-xl rounded-b-2xl">
                 <div class="px-4 py-4 space-y-2">
                     ${Object.entries(pages).map(([key, page]) => {
                         const isActive = key === currentPage;
                         const activeClass = isActive 
                             ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400 font-semibold' 
-                            : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800';
+                            : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100/50 dark:hover:bg-slate-800/50';
                         
                         return `
                             <a href="${page.href}" class="block px-4 py-3 rounded-xl ${activeClass} text-sm transition-all duration-300 flex items-center">
@@ -259,7 +303,7 @@ function createWarningModal() {
     modal.className = 'hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4';
     
     const modalContent = document.createElement('div');
-    modalContent.className = 'bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-2xl border border-slate-200/50 dark:border-slate-700/50 max-w-md w-full p-6';
+    modalContent.className = 'glass-card max-w-md w-full p-6';
     
     const header = document.createElement('div');
     header.className = 'flex items-center mb-4';
@@ -285,11 +329,11 @@ function createWarningModal() {
     const cancelButton = document.createElement('button');
     cancelButton.className = 'px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors';
     cancelButton.setAttribute('data-key', 'cancel');
-    cancelButton.onclick = () => closeWarningModal();
+    cancelButton.setAttribute('onclick', 'closeWarningModal()');
     
     const confirmButton = document.createElement('button');
     confirmButton.id = 'confirmWarning';
-    confirmButton.className = 'px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg transition-colors duration-300';
+    confirmButton.className = 'glass-button bg-yellow-500 hover:bg-yellow-600 text-white shadow-yellow-500/30 hover:shadow-yellow-500/50';
     confirmButton.setAttribute('data-key', 'confirm');
     
     buttonContainer.appendChild(cancelButton);
@@ -303,33 +347,13 @@ function createWarningModal() {
     return modal.outerHTML;
 }
 
-// 复制成功提示组件
-function createCopyToast() {
-    const toast = document.createElement('div');
-    toast.id = 'copyToast';
-    toast.className = 'hidden fixed top-4 right-4 bg-green-500/90 backdrop-blur-sm text-white px-6 py-3 rounded-lg border border-green-400/50 z-50 transform translate-x-full transition-transform duration-300';
-    
-    const content = document.createElement('div');
-    content.className = 'flex items-center';
-    
-    const icon = document.createElement('i');
-    icon.className = 'mr-2';
-    icon.textContent = '✅';
-    
-    const text = document.createElement('span');
-    text.setAttribute('data-key', 'copySuccess');
-    
-    content.appendChild(icon);
-    content.appendChild(text);
-    toast.appendChild(content);
-    
-    return toast.outerHTML;
-}
-
 
 
 // 初始化共享组件
 function initializeSharedComponents(currentPage = 'index') {
+    // 注入全局样式
+    injectGlobalStyles();
+
     // 插入背景
     document.body.insertAdjacentHTML('afterbegin', createTechBackground());
     
@@ -341,7 +365,6 @@ function initializeSharedComponents(currentPage = 'index') {
     
     // 插入模态框
     document.body.insertAdjacentHTML('beforeend', createWarningModal());
-    document.body.insertAdjacentHTML('beforeend', createCopyToast());
     
     // 初始化主题和语言
     if (typeof initializeTheme === 'function') {
@@ -394,7 +417,7 @@ function showToast(message, type = 'success') {
 
 // 切换卡片折叠状态
 function toggleCardCollapse(headerElement) {
-    const card = headerElement.closest('.bg-white') || headerElement.closest('.bg-slate-800') || headerElement.parentElement;
+    const card = headerElement.closest('.glass-card') || headerElement.closest('.bg-white') || headerElement.closest('.bg-slate-800') || headerElement.parentElement;
     if (!card) return;
     
     const content = card.querySelector('.card-content');

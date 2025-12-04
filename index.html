@@ -33,8 +33,8 @@
             <!-- 左侧配置区域 -->
             <div class="space-y-6">
                 <!-- 计费配置 -->
-                <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/30 shadow-lg shadow-slate-200/20 dark:shadow-slate-900/20 overflow-hidden hover:shadow-xl hover:shadow-primary-500/10 dark:hover:shadow-primary-500/5 transition-all duration-300">
-                    <div class="p-6 border-b border-slate-200/50 dark:border-slate-700/50 cursor-pointer hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors duration-300" onclick="toggleCardCollapse(this)">
+                <div class="glass-card glass-card-hover overflow-hidden">
+                    <div class="glass-header cursor-pointer hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors duration-300" onclick="toggleCardCollapse(this)">
                         <div class="flex items-center justify-between">
                             <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 flex items-center">
                                 <div class="w-8 h-8 flex items-center justify-center mr-3">
@@ -52,15 +52,15 @@
                         </div>
                     </div>
                         
-                    <div class="card-content p-6 space-y-6" id="billing-form">
+                    <div class="glass-content card-content space-y-6" id="billing-form">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3" data-key="startDate" data-module="index"></label>
-                                <input type="datetime-local" id="start-date" onchange="updateBilling()" aria-label="起始日期" class="w-full px-4 py-3 border border-slate-200/60 dark:border-slate-700/60 rounded-xl focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm text-slate-900 dark:text-slate-100 transition-all duration-300 hover:bg-white/80 dark:hover:bg-slate-900/80">
+                                <label class="label-text" data-key="startDate" data-module="index"></label>
+                                <input type="datetime-local" id="start-date" onchange="updateBilling()" aria-label="起始日期" class="glass-input">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3" data-key="endDate" data-module="index"></label>
-                                <input type="datetime-local" id="end-date" onchange="updateBilling()" aria-label="结束日期" class="w-full px-4 py-3 border border-slate-200/60 dark:border-slate-700/60 rounded-xl focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm text-slate-900 dark:text-slate-100 transition-all duration-300 hover:bg-white/80 dark:hover:bg-slate-900/80">
+                                <label class="label-text" data-key="endDate" data-module="index"></label>
+                                <input type="datetime-local" id="end-date" onchange="updateBilling()" aria-label="结束日期" class="glass-input">
                             </div>
                         </div>
 
@@ -72,16 +72,16 @@
                                     <div class="w-11 h-6 bg-slate-200/80 dark:bg-slate-700/80 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-500/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all after:shadow-sm dark:border-slate-600 peer-checked:bg-gradient-to-r peer-checked:from-primary-500 peer-checked:to-secondary-500"></div>
                                 </label>
                             </div>
-                            <button class="bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white px-4 py-2 rounded-xl text-sm transition-all duration-300 shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 hover:-translate-y-0.5" id="auto-calc-btn" onclick="triggerAutoCalculation()">
+                            <button class="glass-button btn-primary" id="auto-calc-btn" onclick="triggerAutoCalculation()">
                                 <span class="mr-2">🔢</span>
                                 <span data-key="autoCalc" data-module="index"></span>
                             </button>
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3" data-key="billingCycle" data-module="index"></label>
+                            <label class="label-text" data-key="billingCycle" data-module="index"></label>
                             <div class="flex gap-3 items-center">
-                                <select id="cycle" onchange="updateBilling()" aria-label="计费周期" class="flex-1 px-4 py-3 border border-slate-200/60 dark:border-slate-700/60 rounded-xl focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm text-slate-900 dark:text-slate-100 transition-all duration-300 hover:bg-white/80 dark:hover:bg-slate-900/80">
+                                <select id="cycle" onchange="updateBilling()" aria-label="计费周期" class="glass-input flex-1">
                                     <option value="Day" data-zh="天（非官方）" data-en="Day (Unofficial)">天（非官方）</option>
                                     <option value="Week" data-zh="周（非官方）" data-en="Week (Unofficial)">周（非官方）</option>
                                     <option value="Month" data-zh="月" data-en="Month">月</option>
@@ -99,22 +99,22 @@
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3" data-key="amount" data-module="index"></label>
+                            <label class="label-text" data-key="amount" data-module="index"></label>
                             <div class="space-y-3">
-                                <select id="amount-type" onchange="updateAmountType()" aria-label="金额类型" class="w-full px-4 py-3 border border-slate-200/60 dark:border-slate-700/60 rounded-xl focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm text-slate-900 dark:text-slate-100 transition-all duration-300 hover:bg-white/80 dark:hover:bg-slate-900/80">
+                                <select id="amount-type" onchange="updateAmountType()" aria-label="金额类型" class="glass-input">
                                     <option value="billing" data-zh="计费" data-en="Billing">计费</option>
                                     <option value="free" data-zh="免费" data-en="Free">免费</option>
                                     <option value="payAsGo" data-zh="按量收费" data-en="Pay as Go">按量收费</option>
                                 </select>
                                 <div id="amount-inputs" class="flex gap-2">
-                                    <input type="number" id="amount-value" value="50" onchange="updateBilling()" aria-label="金额数值" class="flex-1 px-4 py-3 border border-slate-200/60 dark:border-slate-700/60 rounded-xl focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm text-slate-900 dark:text-slate-100 transition-all duration-300 hover:bg-white/80 dark:hover:bg-slate-900/80">
-                                    <select id="currency" onchange="updateBilling()" aria-label="货币类型" class="px-4 py-3 border border-slate-200/60 dark:border-slate-700/60 rounded-xl focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm text-slate-900 dark:text-slate-100 transition-all duration-300 hover:bg-white/80 dark:hover:bg-slate-900/80">
+                                    <input type="number" id="amount-value" value="50" onchange="updateBilling()" aria-label="金额数值" class="glass-input flex-1">
+                                    <select id="currency" onchange="updateBilling()" aria-label="货币类型" class="glass-input w-auto">
                                         <option value="CNY" selected>CNY</option>
                                         <option value="USD">USD</option>
                                         <option value="EUR">EUR</option>
                                         <option value="GBP">GBP</option>
                                     </select>
-                                    <select id="currency-format" onchange="updateBilling()" aria-label="货币格式" class="px-4 py-3 border border-slate-200/60 dark:border-slate-700/60 rounded-xl focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm text-slate-900 dark:text-slate-100 transition-all duration-300 hover:bg-white/80 dark:hover:bg-slate-900/80">
+                                    <select id="currency-format" onchange="updateBilling()" aria-label="货币格式" class="glass-input w-auto">
                                         <option value="before">50CNY</option>
                                         <option value="symbol_before">¥50</option>
                                         <option value="after">50¥</option>
@@ -126,8 +126,8 @@
                     </div>
 
                 <!-- 套餐配置 -->
-                <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/30 shadow-lg shadow-slate-200/20 dark:shadow-slate-900/20 overflow-hidden hover:shadow-xl hover:shadow-primary-500/10 dark:hover:shadow-primary-500/5 transition-all duration-300">
-                    <div class="p-6 border-b border-slate-200/50 dark:border-slate-700/50 cursor-pointer hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors duration-300" onclick="toggleCardCollapse(this)">
+                <div class="glass-card glass-card-hover overflow-hidden">
+                    <div class="glass-header cursor-pointer hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors duration-300" onclick="toggleCardCollapse(this)">
                         <div class="flex items-center justify-between">
                             <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 flex items-center">
                                 <div class="w-8 h-8 flex items-center justify-center mr-3">
@@ -145,12 +145,12 @@
                         </div>
                     </div>
                         
-                        <div class="card-content p-6 space-y-6" id="plan-form">
+                        <div class="glass-content card-content space-y-6" id="plan-form">
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3" data-key="bandwidth" data-module="index"></label>
+                                <label class="label-text" data-key="bandwidth" data-module="index"></label>
                                 <div class="flex gap-3">
-                                    <input type="number" id="bandwidth-value" value="500" onchange="updatePlan()" class="flex-1 px-4 py-3 border border-slate-200/60 dark:border-slate-700/60 rounded-xl focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm text-slate-900 dark:text-slate-100 transition-all duration-300 hover:bg-white/80 dark:hover:bg-slate-900/80">
-                                    <select id="bandwidth-unit" onchange="updateBandwidthUnit()" class="px-4 py-3 border border-slate-200/60 dark:border-slate-700/60 rounded-xl focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm text-slate-900 dark:text-slate-100 transition-all duration-300 hover:bg-white/80 dark:hover:bg-slate-900/80">
+                                    <input type="number" id="bandwidth-value" value="500" onchange="updatePlan()" class="glass-input flex-1">
+                                    <select id="bandwidth-unit" onchange="updateBandwidthUnit()" class="glass-input w-auto">
                                         <option value="Mbps" selected>Mbps</option>
                                         <option value="Gbps">Gbps</option>
                                         <option value="Unlimited" data-zh="无限制" data-en="Unlimited">无限制</option>
@@ -159,11 +159,11 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3" data-key="trafficVolume" data-module="index"></label>
+                                <label class="label-text" data-key="trafficVolume" data-module="index"></label>
                                 <div class="flex gap-3 items-center flex-wrap">
                                     <div class="flex gap-3 flex-1 min-w-0">
-                                        <input type="number" id="traffic-value" value="1000" onchange="updatePlan()" class="flex-1 px-4 py-3 border border-slate-200/60 dark:border-slate-700/60 rounded-xl focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm text-slate-900 dark:text-slate-100 transition-all duration-300 hover:bg-white/80 dark:hover:bg-slate-900/80">
-                                        <select id="trafficUnit" onchange="updateTrafficUnit()" class="px-4 py-3 border border-slate-200/60 dark:border-slate-700/60 rounded-xl focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm text-slate-900 dark:text-slate-100 transition-all duration-300 hover:bg-white/80 dark:hover:bg-slate-900/80">
+                                        <input type="number" id="traffic-value" value="1000" onchange="updatePlan()" class="glass-input flex-1">
+                                        <select id="trafficUnit" onchange="updateTrafficUnit()" class="glass-input w-auto">
                                             <option value="MB">MB</option>
                                             <option value="GB">GB</option>
                                             <option value="TB" selected>TB</option>
@@ -172,7 +172,7 @@
                                         </select>
                                     </div>
                                     <span class="text-slate-500 dark:text-slate-400">/</span>
-                                    <select id="trafficPeriod" onchange="updatePlan()" class="px-4 py-3 border border-slate-200/60 dark:border-slate-700/60 rounded-xl focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm text-slate-900 dark:text-slate-100 transition-all duration-300 hover:bg-white/80 dark:hover:bg-slate-900/80">
+                                    <select id="trafficPeriod" onchange="updatePlan()" class="glass-input w-auto">
                                         <option value="Day" data-zh="天" data-en="Day">天</option>
                                         <option value="Month" selected data-zh="月" data-en="Month">月</option>
                                         <option value="Quarter" data-zh="季" data-en="Quarter">季</option>
@@ -184,8 +184,8 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3" data-key="trafficType" data-module="index"></label>
-                                <select id="trafficType" onchange="updatePlan()" class="w-full px-4 py-3 border border-slate-200/60 dark:border-slate-700/60 rounded-xl focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm text-slate-900 dark:text-slate-100 transition-all duration-300 hover:bg-white/80 dark:hover:bg-slate-900/80">
+                                <label class="label-text" data-key="trafficType" data-module="index"></label>
+                                <select id="trafficType" onchange="updatePlan()" class="glass-input">
                                     <option value="1" data-zh="入站" data-en="Inbound">入站</option>
                                     <option value="2" selected data-zh="双向" data-en="Bidirectional">双向</option>
                                 </select>
@@ -193,12 +193,12 @@
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">IPv4</label>
-                                    <input type="number" id="ipv4" value="1" onchange="updatePlan()" class="w-full px-4 py-3 border border-slate-200/60 dark:border-slate-700/60 rounded-xl focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm text-slate-900 dark:text-slate-100 transition-all duration-300 hover:bg-white/80 dark:hover:bg-slate-900/80">
+                                    <label class="label-text">IPv4</label>
+                                    <input type="number" id="ipv4" value="1" onchange="updatePlan()" class="glass-input">
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">IPv6</label>
-                                    <input type="number" id="ipv6" value="1" onchange="updatePlan()" class="w-full px-4 py-3 border border-slate-200/60 dark:border-slate-700/60 rounded-xl focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm text-slate-900 dark:text-slate-100 transition-all duration-300 hover:bg-white/80 dark:hover:bg-slate-900/80">
+                                    <label class="label-text">IPv6</label>
+                                    <input type="number" id="ipv6" value="1" onchange="updatePlan()" class="glass-input">
                                 </div>
                             </div>
 
@@ -207,7 +207,7 @@
                                     <label class="block text-sm font-medium text-slate-700 dark:text-slate-300" data-key="networkRoute" data-module="index"></label>
                                     <a href="https://www.boce.com/traceroute" target="_blank" class="text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300 text-sm font-medium">【<span data-key="routeQuery" data-module="service"></span>】</a>
                                 </div>
-                                <input type="text" id="networkRoute" value="4837" onchange="updatePlan()" class="w-full px-4 py-3 border border-slate-200/60 dark:border-slate-700/60 rounded-xl focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm text-slate-900 dark:text-slate-100 transition-all duration-300 hover:bg-white/80 dark:hover:bg-slate-900/80">
+                                <input type="text" id="networkRoute" value="4837" onchange="updatePlan()" class="glass-input">
                                 <div class="mt-3">
                                     <div class="flex flex-wrap gap-2" id="routeOptionsContainer">
                                         <button type="button" onclick="addRouteOption('163')" class="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-blue-100 dark:hover:bg-blue-900 hover:text-blue-800 dark:hover:text-blue-200 px-3 py-1 rounded-full text-sm transition-all duration-300 border border-slate-200 dark:border-slate-600">163</button>
@@ -224,7 +224,7 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3" data-key="extraTags" data-module="index"></label>
+                                <label class="label-text" data-key="extraTags" data-module="index"></label>
                                 <div class="space-y-3">
                                     <div class="flex flex-wrap gap-2" id="tagsContainer">
                                         <div class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm flex items-center space-x-2">
@@ -248,8 +248,8 @@
 
                 <!-- JSON 代码区域 -->
             <div class="xl:col-span-1">
-                <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/30 shadow-lg shadow-slate-200/20 dark:shadow-slate-900/20 overflow-hidden hover:shadow-xl hover:shadow-primary-500/10 dark:hover:shadow-primary-500/5 transition-all duration-300">
-                    <div class="p-6 border-b border-slate-200/50 dark:border-slate-700/50 cursor-pointer hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors duration-300" onclick="toggleCardCollapse(this)">
+                <div class="glass-card glass-card-hover overflow-hidden">
+                    <div class="glass-header cursor-pointer hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors duration-300" onclick="toggleCardCollapse(this)">
                         <div class="flex items-center justify-between">
                             <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 flex items-center">
                                 <div class="w-8 h-8 flex items-center justify-center mr-3">
@@ -270,7 +270,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card-content p-6">
+                    <div class="glass-content card-content">
                         <textarea id="jsonCode" spellcheck="false" onchange="handleCodeChange()" class="w-full h-96 p-6 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-mono text-sm border-0 focus:ring-0 resize-none leading-relaxed" placeholder="JSON 配置将在这里显示..."></textarea>
                     </div>
                 </div>
@@ -283,8 +283,8 @@
 
     <!-- 网络线路类型说明 -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
-        <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/30 shadow-lg shadow-slate-200/20 dark:shadow-slate-900/20 overflow-hidden hover:shadow-xl hover:shadow-primary-500/10 dark:hover:shadow-primary-500/5 transition-all duration-300">
-            <div class="p-6 border-b border-slate-200/50 dark:border-slate-700/50 cursor-pointer hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors duration-300" onclick="toggleCardCollapse(this)">
+        <div class="glass-card glass-card-hover overflow-hidden">
+            <div class="glass-header cursor-pointer hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors duration-300" onclick="toggleCardCollapse(this)">
                 <div class="flex items-center justify-between">
                     <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 flex items-center">
                         <div class="w-8 h-8 flex items-center justify-center mr-3">
@@ -299,7 +299,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card-content p-6">
+            <div class="glass-content card-content">
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
                         <thead>

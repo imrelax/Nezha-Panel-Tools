@@ -108,7 +108,7 @@ function getCategoryIcon(categoryName) {
 function createFormItem(key, field) {
     // 表单项容器
     const formItem = document.createElement('div');
-    formItem.className = 'bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 mb-4';
+    formItem.className = 'glass-card p-4 mb-4';
     
     // 标签
     const label = document.createElement('div');
@@ -151,7 +151,7 @@ function createFormItem(key, field) {
     let control;
     if (field.type === 'input') {
         control = document.createElement('input');
-        control.className = 'block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 sm:text-sm';
+        control.className = 'glass-input text-sm';
         control.type = 'text';
         control.placeholder = field.placeholder || '';
         control.value = configFormData[key] || '';
@@ -162,7 +162,7 @@ function createFormItem(key, field) {
         });
     } else if (field.type === 'select') {
         control = document.createElement('select');
-        control.className = 'block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 sm:text-sm';
+        control.className = 'glass-input text-sm';
         field.options.forEach(option => {
             const optionEl = document.createElement('option');
             optionEl.value = option.value;
@@ -218,7 +218,7 @@ function createFormItem(key, field) {
 // 创建标签输入控件
 function createTagInput(key, field) {
     const container = document.createElement('div');
-    container.className = 'flex flex-wrap gap-2 p-3 border border-gray-300 rounded-md dark:border-gray-600 dark:bg-gray-700 min-h-[42px] focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500';
+    container.className = 'glass-input flex flex-wrap gap-2 h-auto min-h-[50px]';
     
     const tags = configFormData[key] || [];
     
