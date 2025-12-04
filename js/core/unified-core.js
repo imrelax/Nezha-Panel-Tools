@@ -106,6 +106,7 @@
                     'slide-up': 'slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
                     'bounce-gentle': 'bounceGentle 3s infinite',
                     'pulse-glow': 'pulseGlow 4s ease-in-out infinite',
+                    'blob': 'blob 7s infinite',
                 },
                 keyframes: {
                     fadeIn: {
@@ -124,6 +125,12 @@
                     pulseGlow: {
                         '0%, 100%': { opacity: '1', boxShadow: '0 0 20px -5px rgba(139, 92, 246, 0.5)' },
                         '50%': { opacity: '0.8', boxShadow: '0 0 30px -5px rgba(139, 92, 246, 0.8)' }
+                    },
+                    blob: {
+                        '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                        '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                        '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                        '100%': { transform: 'translate(0px, 0px) scale(1)' }
                     }
                 },
                 backdropBlur: {

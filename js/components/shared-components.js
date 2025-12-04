@@ -3,23 +3,24 @@
 // 科技风背景组件
 function createTechBackground() {
     const background = document.createElement('div');
-    background.className = 'fixed inset-0 -z-10';
+    background.className = 'fixed inset-0 -z-10 overflow-hidden';
     
-    // 基础背景层 - 使用新的深色系
+    // 基础背景层 - 深邃渐变
     const baseLayer = document.createElement('div');
-    baseLayer.className = 'absolute inset-0 bg-slate-50 dark:bg-slate-900 transition-colors duration-500';
+    baseLayer.className = 'absolute inset-0 bg-gradient-to-br from-slate-50 via-slate-100 to-slate-200 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800 transition-colors duration-700';
     
-    // 装饰光晕 - 更加柔和现代
+    // 装饰光晕 - 动态流光
     const glowLayer = document.createElement('div');
-    glowLayer.className = 'absolute top-0 left-0 w-full h-full overflow-hidden';
+    glowLayer.className = 'absolute inset-0';
     glowLayer.innerHTML = `
-        <div class="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-primary-400/20 dark:bg-primary-600/20 blur-[120px] animate-pulse-slow"></div>
-        <div class="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-secondary-400/20 dark:bg-secondary-600/20 blur-[120px] animate-pulse-slow" style="animation-delay: 2s;"></div>
+        <div class="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-gradient-to-r from-primary-400/20 to-indigo-400/20 dark:from-primary-600/10 dark:to-indigo-600/10 blur-[100px] animate-blob mix-blend-multiply dark:mix-blend-screen"></div>
+        <div class="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-gradient-to-l from-secondary-400/20 to-pink-400/20 dark:from-secondary-600/10 dark:to-pink-600/10 blur-[100px] animate-blob animation-delay-2000 mix-blend-multiply dark:mix-blend-screen"></div>
+        <div class="absolute bottom-[-20%] left-[20%] w-[60%] h-[60%] rounded-full bg-gradient-to-t from-purple-400/20 to-blue-400/20 dark:from-purple-600/10 dark:to-blue-600/10 blur-[100px] animate-blob animation-delay-4000 mix-blend-multiply dark:mix-blend-screen"></div>
     `;
     
-    // 网格纹理 - 更加细腻
+    // 网格纹理 - 科技感点阵
     const gridLayer = document.createElement('div');
-    gridLayer.className = 'absolute inset-0 bg-[url("data:image/svg+xml,%3Csvg width=\'20\' height=\'20\' viewBox=\'0 0 20 20\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'%239C92AC\' fill-opacity=\'0.05\' fill-rule=\'evenodd\'%3E%3Ccircle cx=\'3\' cy=\'3\' r=\'1\'/%3E%3Ccircle cx=\'13\' cy=\'13\' r=\'1\'/%3E%3C/g%3E%3C/svg%3E")]';
+    gridLayer.className = 'absolute inset-0 bg-[url("data:image/svg+xml,%3Csvg width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Ccircle cx=\'1\' cy=\'1\' r=\'1\' fill=\'%2394a3b8\' fill-opacity=\'0.07\'/%3E%3C/svg%3E")] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)]';
     
     background.appendChild(baseLayer);
     background.appendChild(glowLayer);
@@ -117,163 +118,135 @@ function createNavigation(currentPage = 'index') {
 // 页脚组件
 function createFooter() {
     const footer = document.createElement('footer');
-    footer.className = 'mt-12 bg-white/60 dark:bg-slate-800/60 backdrop-blur-xl border-t border-slate-200/50 dark:border-slate-700/50';
+    footer.className = 'mt-auto pt-16 pb-8 px-4 sm:px-6 lg:px-8';
     
     const container = document.createElement('div');
-    container.className = 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8';
+    container.className = 'max-w-7xl mx-auto';
     
-    const grid = document.createElement('div');
-    grid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8';
+    // 主体内容区
+    const mainContent = document.createElement('div');
+    mainContent.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 mb-12';
     
-    // 项目信息
-    const projectInfo = document.createElement('div');
-    projectInfo.className = 'space-y-4 text-center md:text-left';
-    const projectTitle = document.createElement('h3');
-    projectTitle.className = 'text-lg font-semibold text-slate-900 dark:text-slate-100';
-    projectTitle.setAttribute('data-key', 'projectInfo');
+    // 1. 项目品牌区 (占4列)
+    const brandSection = document.createElement('div');
+    brandSection.className = 'lg:col-span-4 space-y-4';
     
-    const projectDetails = document.createElement('div');
-    projectDetails.className = 'space-y-2 text-sm text-slate-600 dark:text-slate-400';
+    const brandHeader = document.createElement('div');
+    brandHeader.className = 'flex items-center space-x-3';
+    brandHeader.innerHTML = `
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-primary-500/20">
+            <img src="assets/img/ico.png" alt="Logo" class="w-8 h-8 rounded-lg brightness-200 contrast-200">
+        </div>
+        <span class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300" data-key="title"></span>
+    `;
     
     const description = document.createElement('p');
+    description.className = 'text-sm text-slate-600 dark:text-slate-400 leading-relaxed max-w-sm';
     description.setAttribute('data-key', 'projectDescription');
     
-    const version = document.createElement('p');
-    version.setAttribute('data-key', 'version');
+    const statusBadges = document.createElement('div');
+    statusBadges.className = 'flex flex-wrap gap-2 pt-2';
     
-    const lastUpdate = document.createElement('p');
-    lastUpdate.setAttribute('data-key', 'lastUpdate');
+    // 版本徽章
+    const versionBadge = document.createElement('span');
+    versionBadge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-50 text-primary-700 dark:bg-primary-500/10 dark:text-primary-400 border border-primary-100 dark:border-primary-500/20';
+    versionBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-primary-500 mr-1.5 animate-pulse"></span><span data-key="version"></span>';
     
-    projectDetails.appendChild(description);
-    projectDetails.appendChild(version);
-    projectDetails.appendChild(lastUpdate);
-    projectInfo.appendChild(projectTitle);
-    projectInfo.appendChild(projectDetails);
+    // 更新时间徽章
+    const updateBadge = document.createElement('span');
+    updateBadge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400 border border-slate-200 dark:border-slate-700';
+    updateBadge.setAttribute('data-key', 'lastUpdate');
     
-    // 相关链接
-    const linksSection = document.createElement('div');
-    linksSection.className = 'space-y-4 md:col-span-1 lg:col-span-2 hidden md:block';
+    statusBadges.appendChild(versionBadge);
+    statusBadges.appendChild(updateBadge);
     
-    const linksGrid = document.createElement('div');
-    linksGrid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-6';
+    brandSection.appendChild(brandHeader);
+    brandSection.appendChild(description);
+    brandSection.appendChild(statusBadges);
     
-    // 原作相关
-    const originalLinks = document.createElement('div');
-    originalLinks.className = 'space-y-4';
-    const originalTitle = document.createElement('h3');
-    originalTitle.className = 'text-lg font-semibold text-slate-900 dark:text-slate-100';
-    originalTitle.setAttribute('data-key', 'relatedLinks');
+    // 2. 链接导航区 (占8列)
+    const linksContainer = document.createElement('div');
+    linksContainer.className = 'lg:col-span-8 grid grid-cols-2 sm:grid-cols-3 gap-8';
     
-    const originalLinksDiv = document.createElement('div');
-    originalLinksDiv.className = 'space-y-2 text-sm';
+    // 链接组辅助函数
+    const createLinkGroup = (titleKey, links) => {
+        const group = document.createElement('div');
+        group.className = 'space-y-4';
+        
+        const title = document.createElement('h3');
+        title.className = 'text-sm font-semibold text-slate-900 dark:text-white tracking-wider uppercase';
+        title.setAttribute('data-key', titleKey);
+        
+        const list = document.createElement('ul');
+        list.className = 'space-y-3';
+        
+        links.forEach(link => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = link.href;
+            a.target = '_blank';
+            a.className = 'text-sm text-slate-600 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-300 flex items-center group';
+            
+            // 外部链接图标
+            const icon = link.icon || '<svg class="w-3 h-3 ml-1 opacity-0 group-hover:opacity-100 transition-opacity -translate-x-1 group-hover:translate-x-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>';
+            
+            a.innerHTML = `<span data-key="${link.key}"></span>${icon}`;
+            li.appendChild(a);
+            list.appendChild(li);
+        });
+        
+        group.appendChild(title);
+        group.appendChild(list);
+        return group;
+    };
     
-    const sourceLink = document.createElement('a');
-    sourceLink.href = 'https://github.com/imrelax/Nezha-Panel-Tools';
-    sourceLink.target = '_blank';
-    sourceLink.className = 'block text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors';
-    sourceLink.setAttribute('data-key', 'sourceCode');
+    // 定义链接组
+    const relatedLinks = [
+        { key: 'sourceCode', href: 'https://github.com/imrelax/Nezha-Panel-Tools' },
+        { key: 'nezhaOfficial', href: 'https://nezha.wiki' },
+        { key: 'authorSite', href: 'https://lagsn.es' }
+    ];
     
-    const nezhaLink = document.createElement('a');
-    nezhaLink.href = 'https://nezha.wiki';
-    nezhaLink.target = '_blank';
-    nezhaLink.className = 'block text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors';
-    nezhaLink.setAttribute('data-key', 'nezhaOfficial');
+    const siteLinks = [
+        { key: 'siteSource', href: 'https://github.com/imrelax/Nezha-Panel-Tools' },
+        { key: 'siteAuthor', href: 'https://xxxx.im' },
+        { key: 'siteAbout', href: 'https://nztools.xxxx.im' }
+    ];
     
-    const authorLink = document.createElement('a');
-    authorLink.href = 'https://lagsn.es';
-    authorLink.target = '_blank';
-    authorLink.className = 'block text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors';
-    authorLink.setAttribute('data-key', 'authorSite');
+    const legalLinks = [
+        { key: 'licenseType', href: 'https://github.com/imrelax/Nezha-Panel-Tools/blob/main/LICENSE' },
+        { key: 'contribution', href: 'https://github.com/imrelax/Nezha-Panel-Tools/pulls' }
+    ];
     
-    originalLinksDiv.appendChild(sourceLink);
-    originalLinksDiv.appendChild(nezhaLink);
-    originalLinksDiv.appendChild(authorLink);
-    originalLinks.appendChild(originalTitle);
-    originalLinks.appendChild(originalLinksDiv);
+    linksContainer.appendChild(createLinkGroup('relatedLinks', relatedLinks));
+    linksContainer.appendChild(createLinkGroup('siteRelated', siteLinks));
+    linksContainer.appendChild(createLinkGroup('license', legalLinks));
     
-    // 本站相关
-    const siteLinks = document.createElement('div');
-    siteLinks.className = 'space-y-4';
-    const siteTitle = document.createElement('h3');
-    siteTitle.className = 'text-lg font-semibold text-slate-900 dark:text-slate-100';
-    siteTitle.setAttribute('data-key', 'siteRelated');
+    mainContent.appendChild(brandSection);
+    mainContent.appendChild(linksContainer);
     
-    const siteLinksDiv = document.createElement('div');
-    siteLinksDiv.className = 'space-y-2 text-sm';
-    
-    const siteSourceLink = document.createElement('a');
-    siteSourceLink.href = 'https://github.com/imrelax/Nezha-Panel-Tools';
-    siteSourceLink.target = '_blank';
-    siteSourceLink.className = 'block text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors';
-    siteSourceLink.setAttribute('data-key', 'siteSource');
-    
-    const siteAuthorLink = document.createElement('a');
-    siteAuthorLink.href = 'https://xxxx.im';
-    siteAuthorLink.target = '_blank';
-    siteAuthorLink.className = 'block text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors';
-    siteAuthorLink.setAttribute('data-key', 'siteAuthor');
-    
-    const aboutLink = document.createElement('a');
-    aboutLink.href = 'https://nztools.xxxx.im';
-    aboutLink.className = 'block text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors';
-    aboutLink.setAttribute('data-key', 'siteAbout');
-    aboutLink.setAttribute('target', '_blank');
-    
-    siteLinksDiv.appendChild(siteSourceLink);
-    siteLinksDiv.appendChild(siteAuthorLink);
-    siteLinksDiv.appendChild(aboutLink);
-    siteLinks.appendChild(siteTitle);
-    siteLinks.appendChild(siteLinksDiv);
-    
-    linksGrid.appendChild(originalLinks);
-    linksGrid.appendChild(siteLinks);
-    linksSection.appendChild(linksGrid);
-    
-    // 许可证信息
-    const licenseSection = document.createElement('div');
-    licenseSection.className = 'space-y-4 hidden md:block';
-    const licenseTitle = document.createElement('h3');
-    licenseTitle.className = 'text-lg font-semibold text-slate-900 dark:text-slate-100';
-    licenseTitle.setAttribute('data-key', 'license');
-    
-    const licenseDetails = document.createElement('div');
-    licenseDetails.className = 'space-y-2 text-sm text-slate-600 dark:text-slate-400';
-    
-    const licenseType = document.createElement('p');
-    licenseType.setAttribute('data-key', 'licenseType');
-    
-    const openSource = document.createElement('p');
-    openSource.setAttribute('data-key', 'openSource');
-    
-    const contribution = document.createElement('p');
-    contribution.setAttribute('data-key', 'contribution');
-    
-    licenseDetails.appendChild(licenseType);
-    licenseDetails.appendChild(openSource);
-    licenseDetails.appendChild(contribution);
-    licenseSection.appendChild(licenseTitle);
-    licenseSection.appendChild(licenseDetails);
-    
-    grid.appendChild(projectInfo);
-    grid.appendChild(linksSection);
-    grid.appendChild(licenseSection);
-    
-    // 底部版权
-    const bottomSection = document.createElement('div');
-    bottomSection.className = 'mt-8 pt-8 border-t border-slate-200/50 dark:border-slate-700/50 text-center text-sm text-slate-600 dark:text-slate-400';
+    // 底部版权区
+    const bottomBar = document.createElement('div');
+    bottomBar.className = 'pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4';
     
     const copyright = document.createElement('p');
-    copyright.innerHTML = '&copy; 2025 Nezha Panel Tools. ';
-    const rightsSpan = document.createElement('span');
-    rightsSpan.setAttribute('data-key', 'allRightsReserved');
-    rightsSpan.textContent = '保留所有权利';
-    copyright.appendChild(rightsSpan);
-    copyright.appendChild(document.createTextNode('.'));
+    copyright.className = 'text-sm text-slate-500 dark:text-slate-500 text-center md:text-left';
+    copyright.innerHTML = `&copy; ${new Date().getFullYear()} Nezha Panel Tools. <span data-key="allRightsReserved"></span>.`;
     
-    bottomSection.appendChild(copyright);
+    const madeWith = document.createElement('p');
+    madeWith.className = 'text-sm text-slate-500 dark:text-slate-500 flex items-center gap-1.5';
+    madeWith.innerHTML = `
+        <span data-key="madeWith"></span>
+        <span class="text-red-500 animate-pulse">❤</span>
+        <span data-key="and"></span>
+        <span class="text-primary-500">☕</span>
+    `;
     
-    container.appendChild(grid);
-    container.appendChild(bottomSection);
+    bottomBar.appendChild(copyright);
+    bottomBar.appendChild(madeWith);
+    
+    container.appendChild(mainContent);
+    container.appendChild(bottomBar);
     footer.appendChild(container);
     
     return footer.outerHTML;

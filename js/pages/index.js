@@ -913,6 +913,7 @@
 
     // 导出函数到全局
     window.initializeIndexPage = initializeIndexPage;
+    window.renderTags = renderTags;
     window.copyCode = copyCode;
     window.updateBilling = updateBilling;
     window.updatePlan = updatePlan;
