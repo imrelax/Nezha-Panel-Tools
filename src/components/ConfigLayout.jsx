@@ -42,7 +42,7 @@ export default function ConfigLayout({
           title={t('configCode', 'beautify')} 
           icon="💻"
           defaultOpen={defaultOpen}
-          headerActions={
+          actions={
             <div className="flex items-center space-x-2">
               {headerActions}
               <button 

@@ -248,25 +248,26 @@ export default function BeautifyPage() {
             title={t('configCode', 'beautify')}
             icon="💻"
             defaultOpen={true}
-            headerActions={
+            actions={
               <div className="flex items-center space-x-2">
                 <button 
                   onClick={() => setShowImportModal(true)}
-                  className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white px-3 py-1.5 rounded-lg shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transform hover:-translate-y-0.5 transition-all duration-200 text-sm font-medium flex items-center"
+                  className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white px-4 py-2 rounded-xl shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transform hover:-translate-y-0.5 transition-all duration-200 text-sm font-medium flex items-center"
                 >
                   <span className="mr-1.5">📥</span>
                   {t('import', 'beautify')}
                 </button>
                 <button 
                   onClick={handleReset}
-                  className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white px-3 py-1.5 rounded-lg shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 transform hover:-translate-y-0.5 transition-all duration-200 text-sm font-medium flex items-center"
+                  className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white px-4 py-2 rounded-xl shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 transform hover:-translate-y-0.5 transition-all duration-200 text-sm font-medium flex items-center"
                 >
                   <span className="mr-1.5">🔄</span>
                   {t('reset', 'common')}
                 </button>
                 <button 
                   onClick={copyToClipboard}
-                  className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white px-3 py-1.5 rounded-lg shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 transform hover:-translate-y-0.5 transition-all duration-200 text-sm font-medium flex items-center"
+                  className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white px-4 py-2 rounded-xl shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 transform hover:-translate-y-0.5 transition-all duration-200 text-sm font-medium flex items-center"
+                  disabled={!jsonOutput}
                 >
                   <span className="mr-1.5">📋</span>
                   {t('copy', 'common')}
