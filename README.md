@@ -146,7 +146,7 @@ npm start
 ## 🚀 Cloudflare Pages 部署优势
 
 - **全球加速**：利用 Cloudflare 全球网络，快速访问
-- **自动部署**：GitHub Actions 自动构建和部署
+- **自动部署**：Cloudflare Pages 自动构建和部署
 - **完全免费**：Cloudflare Pages 提供免费的托管服务
 - **高可用性**：自动故障转移和负载均衡
 - **SSL 证书**：自动 HTTPS 加密
